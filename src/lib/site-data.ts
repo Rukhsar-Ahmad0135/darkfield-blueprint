@@ -91,7 +91,7 @@ export const TECHNOLOGIES = [
       { h: "Use Cases", b: "Enterprise rollouts, classified deployments, multi-site R&D programs." },
     ],
   },
-] as const;
+];
 
 export type Technology = (typeof TECHNOLOGIES)[number];
 
@@ -120,7 +120,7 @@ export const SERVICES = [
     summary:
       "Industrial-grade 3D synthesis for rapid deployment and mechanical component fabrication.",
   },
-] as const;
+];
 
 export const JOBS = [
   {
@@ -216,7 +216,7 @@ export const JOBS = [
       "Strong programming fundamentals",
     ],
   },
-] as const;
+];
 
 export type Job = (typeof JOBS)[number];
 
@@ -249,4 +249,4 @@ export const RESEARCH_PROJECTS = [
     summary:
       "A protocol layer engineered to carry operationally-meaningful telemetry without generating exploitable signal patterns.",
   },
-] as const;
+];
