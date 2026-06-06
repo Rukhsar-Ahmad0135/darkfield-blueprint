@@ -68,7 +68,7 @@ function JobDetail() {
           <div>
             <Eyebrow>Responsibilities</Eyebrow>
             <ul className="mt-6 space-y-4">
-              {job.responsibilities.map((r) => (
+              {job.responsibilities.map((r: string) => (
                 <li key={r} className="flex gap-4 border-b border-hairline pb-4 text-muted-foreground">
                   <span className="text-text-muted">→</span> {r}
                 </li>
@@ -78,7 +78,7 @@ function JobDetail() {
           <div>
             <Eyebrow>Requirements</Eyebrow>
             <ul className="mt-6 space-y-4">
-              {job.requirements.map((r) => (
+              {job.requirements.map((r: string) => (
                 <li key={r} className="flex gap-4 border-b border-hairline pb-4 text-muted-foreground">
                   <span className="text-text-muted">·</span> {r}
                 </li>
