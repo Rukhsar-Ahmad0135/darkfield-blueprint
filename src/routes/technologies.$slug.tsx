@@ -59,7 +59,7 @@ function TechDetail() {
           <aside className="lg:col-span-3">
             <Eyebrow>Capabilities</Eyebrow>
             <ul className="mt-6 space-y-3 text-sm">
-              {tech.capabilities.map((c) => (
+              {tech.capabilities.map((c: string) => (
                 <li key={c} className="border-b border-hairline pb-3 text-muted-foreground">
                   {c}
                 </li>
@@ -67,7 +67,7 @@ function TechDetail() {
             </ul>
           </aside>
           <div className="space-y-16 lg:col-span-8 lg:col-start-5">
-            {tech.sections.map((s, i) => (
+            {tech.sections.map((s: {h: string; b: string}, i: number) => (
               <div key={s.h} className="border-t border-hairline pt-10">
                 <span className="text-mono text-xs text-text-muted">0{i + 1}</span>
                 <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">{s.h}</h2>
