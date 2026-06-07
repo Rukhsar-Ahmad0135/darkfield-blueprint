@@ -12,12 +12,15 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ResearchRouteImport } from './routes/research'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ApplyRouteImport } from './routes/apply'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TechnologiesIndexRouteImport } from './routes/technologies.index'
 import { Route as CareersIndexRouteImport } from './routes/careers.index'
 import { Route as TechnologiesSlugRouteImport } from './routes/technologies.$slug'
 import { Route as CareersSlugRouteImport } from './routes/careers.$slug'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated.admin'
 
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
@@ -34,9 +37,18 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApplyRoute = ApplyRouteImport.update({
   id: '/apply',
   path: '/apply',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -64,13 +76,20 @@ const CareersSlugRoute = CareersSlugRouteImport.update({
   path: '/careers/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/apply': typeof ApplyRoute
+  '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/research': typeof ResearchRoute
   '/services': typeof ServicesRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/technologies/$slug': typeof TechnologiesSlugRoute
   '/careers/': typeof CareersIndexRoute
@@ -79,9 +98,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/apply': typeof ApplyRoute
+  '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/research': typeof ResearchRoute
   '/services': typeof ServicesRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/technologies/$slug': typeof TechnologiesSlugRoute
   '/careers': typeof CareersIndexRoute
@@ -90,10 +111,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/apply': typeof ApplyRoute
+  '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/research': typeof ResearchRoute
   '/services': typeof ServicesRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/technologies/$slug': typeof TechnologiesSlugRoute
   '/careers/': typeof CareersIndexRoute
@@ -104,9 +128,11 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/apply'
+    | '/auth'
     | '/contact'
     | '/research'
     | '/services'
+    | '/admin'
     | '/careers/$slug'
     | '/technologies/$slug'
     | '/careers/'
@@ -115,9 +141,11 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/apply'
+    | '/auth'
     | '/contact'
     | '/research'
     | '/services'
+    | '/admin'
     | '/careers/$slug'
     | '/technologies/$slug'
     | '/careers'
@@ -125,10 +153,13 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/apply'
+    | '/auth'
     | '/contact'
     | '/research'
     | '/services'
+    | '/_authenticated/admin'
     | '/careers/$slug'
     | '/technologies/$slug'
     | '/careers/'
@@ -137,7 +168,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   ApplyRoute: typeof ApplyRoute
+  AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   ResearchRoute: typeof ResearchRoute
   ServicesRoute: typeof ServicesRoute
@@ -170,11 +203,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/apply': {
       id: '/apply'
       path: '/apply'
       fullPath: '/apply'
       preLoaderRoute: typeof ApplyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -212,12 +259,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CareersSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   ApplyRoute: ApplyRoute,
+  AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   ResearchRoute: ResearchRoute,
   ServicesRoute: ServicesRoute,
