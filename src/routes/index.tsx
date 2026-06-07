@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { SiteShell, Section, Eyebrow } from "@/components/site/SiteShell";
-import { GridBackdrop, MeshDiagram, TriangleMark } from "@/components/site/Visuals";
+import { GridBackdrop, MeshDiagram, SierpinskiLogo, InteractiveMesh } from "@/components/site/Visuals";
 import { TECHNOLOGIES, SERVICES } from "@/lib/site-data";
+import { supabase } from "@/integrations/supabase/client";
 import { ArrowUpRight } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -31,9 +33,49 @@ function Home() {
       <TechGrid />
       <Architecture />
       <ServicesPreview />
+      <TeamSection />
       <CareersCTA />
       <BigCTA />
     </SiteShell>
+  );
+}
+
+function TeamSection() {
+  const { data: team } = useQuery({
+    queryKey: ["public-employees"],
+    queryFn: async () => {
+      const { data } = await supabase.from("employees").select("*").eq("is_active", true).order("display_order");
+      return data ?? [];
+    },
+  });
+  if (!team || team.length === 0) return null;
+  return (
+    <Section className="border-b border-hairline">
+      <Eyebrow>The Team</Eyebrow>
+      <h2 className="mt-6 max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">Operators, engineers, researchers.</h2>
+      <div className="mt-16 grid gap-px border border-hairline bg-hairline sm:grid-cols-2 lg:grid-cols-3">
+        {team.map((m) => (
+          <div key={m.id} className="flex flex-col gap-4 bg-background p-8">
+            <div className="flex items-start gap-4">
+              {m.photo_url ? (
+                <img src={m.photo_url} alt={m.full_name} className="size-16 border border-hairline object-cover" />
+              ) : (
+                <div className="flex size-16 items-center justify-center border border-hairline text-mono text-xs text-text-muted">
+                  {m.full_name.split(" ").map((p: string) => p[0]).join("").slice(0, 2)}
+                </div>
+              )}
+              <div>
+                <div className="font-medium">{m.full_name}</div>
+                <div className="text-sm text-muted-foreground">{m.position}</div>
+                {m.department && <div className="text-[11px] uppercase tracking-[0.18em] text-text-muted">{m.department}</div>}
+              </div>
+            </div>
+            {m.bio && <p className="text-sm text-muted-foreground">{m.bio}</p>}
+            {m.linkedin_url && <a href={m.linkedin_url} target="_blank" rel="noreferrer" className="mt-auto text-[11px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground">LinkedIn →</a>}
+          </div>
+        ))}
+      </div>
+    </Section>
   );
 }
 
@@ -41,49 +83,32 @@ function Hero() {
   return (
     <section className="relative overflow-hidden border-b border-hairline">
       <GridBackdrop />
+      <InteractiveMesh />
       <div className="relative mx-auto grid max-w-[1400px] gap-16 px-6 pb-32 pt-24 lg:grid-cols-12 lg:px-12 lg:pt-32">
         <div className="lg:col-span-7">
           <Eyebrow>Dark Field / Tech Labs · est. 2026</Eyebrow>
-          <h1 className="mt-8 text-[44px] font-semibold leading-[1.02] tracking-[-0.02em] sm:text-[64px] lg:text-[88px]">
-            Engineering
-            <br />
-            <span className="text-text-muted">intelligent</span>
-            <br />
+          <h1 className="mt-8 text-[44px] font-semibold leading-[1.02] tracking-[-0.02em] sm:text-[64px] lg:text-[88px] animate-fade-up">
+            Engineering<br />
+            <span className="text-text-muted">intelligent</span><br />
             systems.
           </h1>
           <p className="mt-8 max-w-xl text-base text-muted-foreground sm:text-lg">
-            Four vertical pillars — Wireless, Stealth, Surveillance, Systems — built to solve
-            adversarial and performance-critical challenges where centralized infrastructure
-            fails.
+            Four vertical pillars — Wireless, Stealth, Surveillance, Systems — built to solve adversarial and performance-critical challenges where centralized infrastructure fails.
           </p>
-
           <div className="mt-10 flex flex-wrap items-center gap-3">
-            <Link
-              to="/technologies"
-              className="group inline-flex items-center gap-2 bg-foreground px-6 py-3.5 text-[12px] uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-90"
-            >
+            <Link to="/technologies" className="group inline-flex items-center gap-2 bg-foreground px-6 py-3.5 text-[12px] uppercase tracking-[0.2em] text-background hover:opacity-90">
               Explore Technologies
               <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
-            <Link
-              to="/contact"
-              className="inline-flex items-center gap-2 border border-hairline px-6 py-3.5 text-[12px] uppercase tracking-[0.2em] transition-colors hover:border-foreground"
-            >
+            <Link to="/contact" className="inline-flex items-center gap-2 border border-hairline px-6 py-3.5 text-[12px] uppercase tracking-[0.2em] hover:border-foreground">
               Contact Lab
             </Link>
           </div>
-
           <dl className="mt-16 grid max-w-lg grid-cols-3 gap-6 border-t border-hairline pt-8">
-            {[
-              ["04", "Core Pillars"],
-              ["R&D", "Mandate"],
-              ["Global", "Architecture"],
-            ].map(([k, v]) => (
+            {[["04", "Core Pillars"], ["R&D", "Mandate"], ["Global", "Architecture"]].map(([k, v]) => (
               <div key={v}>
                 <dt className="text-mono text-[22px] font-medium">{k}</dt>
-                <dd className="mt-1 text-[11px] uppercase tracking-[0.2em] text-text-muted">
-                  {v}
-                </dd>
+                <dd className="mt-1 text-[11px] uppercase tracking-[0.2em] text-text-muted">{v}</dd>
               </div>
             ))}
           </dl>
@@ -92,12 +117,10 @@ function Hero() {
         <div className="relative lg:col-span-5">
           <div className="relative aspect-square border border-hairline">
             <div className="absolute inset-0 grid-bg opacity-60" />
-            <TriangleMark className="absolute inset-0 m-auto h-3/4 w-3/4 text-foreground/90" />
+            <SierpinskiLogo className="absolute inset-0 m-auto h-4/5 w-4/5 text-foreground/90" rows={6} animate />
             <div className="absolute left-4 top-4 eyebrow">SYS_ID / DFTL-001</div>
-            <div className="absolute bottom-4 left-4 text-mono text-[10px] text-text-muted">
-              MESH · STEALTH · SENSE
-            </div>
-            <div className="absolute right-4 top-4 size-2 bg-foreground" />
+            <div className="absolute bottom-4 left-4 text-mono text-[10px] text-text-muted">MESH · STEALTH · SENSE</div>
+            <div className="absolute right-4 top-4 size-2 animate-pulse bg-foreground" />
           </div>
           <div className="mt-3 flex justify-between text-[10px] uppercase tracking-[0.22em] text-text-muted">
             <span>[ 00:01 ] system online</span>
