@@ -14,16 +14,221 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      applications: {
+        Row: {
+          cover_letter: string | null
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          job_id: string | null
+          job_title: string
+          linkedin_url: string | null
+          location: string
+          phone: string
+          portfolio_url: string | null
+          resume_path: string
+          resume_url: string
+          status: string
+          updated_at: string
+          years_experience: string
+        }
+        Insert: {
+          cover_letter?: string | null
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          job_id?: string | null
+          job_title: string
+          linkedin_url?: string | null
+          location: string
+          phone: string
+          portfolio_url?: string | null
+          resume_path: string
+          resume_url: string
+          status?: string
+          updated_at?: string
+          years_experience: string
+        }
+        Update: {
+          cover_letter?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          job_id?: string | null
+          job_title?: string
+          linkedin_url?: string | null
+          location?: string
+          phone?: string
+          portfolio_url?: string | null
+          resume_path?: string
+          resume_url?: string
+          status?: string
+          updated_at?: string
+          years_experience?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "applications_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      employees: {
+        Row: {
+          bio: string | null
+          created_at: string
+          department: string | null
+          display_order: number
+          email: string | null
+          full_name: string
+          id: string
+          is_active: boolean
+          linkedin_url: string | null
+          photo_path: string | null
+          photo_url: string | null
+          position: string
+          updated_at: string
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          department?: string | null
+          display_order?: number
+          email?: string | null
+          full_name: string
+          id?: string
+          is_active?: boolean
+          linkedin_url?: string | null
+          photo_path?: string | null
+          photo_url?: string | null
+          position: string
+          updated_at?: string
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          department?: string | null
+          display_order?: number
+          email?: string | null
+          full_name?: string
+          id?: string
+          is_active?: boolean
+          linkedin_url?: string | null
+          photo_path?: string | null
+          photo_url?: string | null
+          position?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      jobs: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          location: string
+          requirements: string[]
+          responsibilities: string[]
+          slug: string
+          summary: string
+          team: string
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          location?: string
+          requirements?: string[]
+          responsibilities?: string[]
+          slug: string
+          summary: string
+          team: string
+          title: string
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          location?: string
+          requirements?: string[]
+          responsibilities?: string[]
+          slug?: string
+          summary?: string
+          team?: string
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +355,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
