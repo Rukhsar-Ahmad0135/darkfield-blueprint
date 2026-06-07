@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
+import { SierpinskiLogo } from "./Visuals";
 
 const links = [
   { to: "/", label: "Home" },
@@ -100,19 +101,5 @@ export function Navbar() {
 }
 
 export function LogoMark({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 32 32"
-      className={`size-6 ${className}`}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M16 4 L4 28 L28 28 Z" strokeDasharray="2 2" />
-      <path d="M16 12 L10 22 L22 22 Z" strokeDasharray="2 2" />
-      <path d="M16 18 L13 24 L19 24 Z" strokeDasharray="2 2" />
-    </svg>
-  );
+  return <SierpinskiLogo className={`size-7 ${className}`} rows={5} />;
 }

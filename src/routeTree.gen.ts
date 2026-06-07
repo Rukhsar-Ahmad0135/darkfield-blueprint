@@ -21,6 +21,10 @@ import { Route as CareersIndexRouteImport } from './routes/careers.index'
 import { Route as TechnologiesSlugRouteImport } from './routes/technologies.$slug'
 import { Route as CareersSlugRouteImport } from './routes/careers.$slug'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated.admin'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated.admin.index'
+import { Route as AuthenticatedAdminJobsRouteImport } from './routes/_authenticated.admin.jobs'
+import { Route as AuthenticatedAdminEmployeesRouteImport } from './routes/_authenticated.admin.employees'
+import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_authenticated.admin.applications'
 
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
@@ -81,6 +85,28 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminJobsRoute = AuthenticatedAdminJobsRouteImport.update({
+  id: '/jobs',
+  path: '/jobs',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminEmployeesRoute =
+  AuthenticatedAdminEmployeesRouteImport.update({
+    id: '/employees',
+    path: '/employees',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminApplicationsRoute =
+  AuthenticatedAdminApplicationsRouteImport.update({
+    id: '/applications',
+    path: '/applications',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -89,11 +115,15 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/research': typeof ResearchRoute
   '/services': typeof ServicesRoute
-  '/admin': typeof AuthenticatedAdminRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/careers/$slug': typeof CareersSlugRoute
   '/technologies/$slug': typeof TechnologiesSlugRoute
   '/careers/': typeof CareersIndexRoute
   '/technologies/': typeof TechnologiesIndexRoute
+  '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
+  '/admin/employees': typeof AuthenticatedAdminEmployeesRoute
+  '/admin/jobs': typeof AuthenticatedAdminJobsRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -102,11 +132,14 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/research': typeof ResearchRoute
   '/services': typeof ServicesRoute
-  '/admin': typeof AuthenticatedAdminRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/technologies/$slug': typeof TechnologiesSlugRoute
   '/careers': typeof CareersIndexRoute
   '/technologies': typeof TechnologiesIndexRoute
+  '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
+  '/admin/employees': typeof AuthenticatedAdminEmployeesRoute
+  '/admin/jobs': typeof AuthenticatedAdminJobsRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -117,11 +150,15 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/research': typeof ResearchRoute
   '/services': typeof ServicesRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/careers/$slug': typeof CareersSlugRoute
   '/technologies/$slug': typeof TechnologiesSlugRoute
   '/careers/': typeof CareersIndexRoute
   '/technologies/': typeof TechnologiesIndexRoute
+  '/_authenticated/admin/applications': typeof AuthenticatedAdminApplicationsRoute
+  '/_authenticated/admin/employees': typeof AuthenticatedAdminEmployeesRoute
+  '/_authenticated/admin/jobs': typeof AuthenticatedAdminJobsRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -137,6 +174,10 @@ export interface FileRouteTypes {
     | '/technologies/$slug'
     | '/careers/'
     | '/technologies/'
+    | '/admin/applications'
+    | '/admin/employees'
+    | '/admin/jobs'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -145,11 +186,14 @@ export interface FileRouteTypes {
     | '/contact'
     | '/research'
     | '/services'
-    | '/admin'
     | '/careers/$slug'
     | '/technologies/$slug'
     | '/careers'
     | '/technologies'
+    | '/admin/applications'
+    | '/admin/employees'
+    | '/admin/jobs'
+    | '/admin'
   id:
     | '__root__'
     | '/'
@@ -164,6 +208,10 @@ export interface FileRouteTypes {
     | '/technologies/$slug'
     | '/careers/'
     | '/technologies/'
+    | '/_authenticated/admin/applications'
+    | '/_authenticated/admin/employees'
+    | '/_authenticated/admin/jobs'
+    | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -266,15 +314,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/jobs': {
+      id: '/_authenticated/admin/jobs'
+      path: '/jobs'
+      fullPath: '/admin/jobs'
+      preLoaderRoute: typeof AuthenticatedAdminJobsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/employees': {
+      id: '/_authenticated/admin/employees'
+      path: '/employees'
+      fullPath: '/admin/employees'
+      preLoaderRoute: typeof AuthenticatedAdminEmployeesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/applications': {
+      id: '/_authenticated/admin/applications'
+      path: '/applications'
+      fullPath: '/admin/applications'
+      preLoaderRoute: typeof AuthenticatedAdminApplicationsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminApplicationsRoute: typeof AuthenticatedAdminApplicationsRoute
+  AuthenticatedAdminEmployeesRoute: typeof AuthenticatedAdminEmployeesRoute
+  AuthenticatedAdminJobsRoute: typeof AuthenticatedAdminJobsRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminApplicationsRoute: AuthenticatedAdminApplicationsRoute,
+  AuthenticatedAdminEmployeesRoute: AuthenticatedAdminEmployeesRoute,
+  AuthenticatedAdminJobsRoute: AuthenticatedAdminJobsRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
 interface AuthenticatedRouteChildren {
-  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
-  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
