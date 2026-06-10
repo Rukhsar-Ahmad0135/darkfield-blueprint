@@ -79,6 +79,48 @@ export type Database = {
           },
         ]
       }
+      collaborations: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number
+          id: string
+          is_active: boolean
+          logo_url: string | null
+          name: string
+          slug: string
+          tier: string
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          logo_url?: string | null
+          name: string
+          slug: string
+          tier?: string
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          logo_url?: string | null
+          name?: string
+          slug?: string
+          tier?: string
+          updated_at?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
       employees: {
         Row: {
           bio: string | null
@@ -168,6 +210,54 @@ export type Database = {
           team?: string
           title?: string
           type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      opportunities: {
+        Row: {
+          apply_url: string | null
+          category: string
+          created_at: string
+          deadline: string | null
+          description: string | null
+          display_order: number
+          id: string
+          is_active: boolean
+          location: string | null
+          slug: string
+          summary: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          apply_url?: string | null
+          category?: string
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          location?: string | null
+          slug: string
+          summary: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          apply_url?: string | null
+          category?: string
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          location?: string | null
+          slug?: string
+          summary?: string
+          title?: string
           updated_at?: string
         }
         Relationships: []
