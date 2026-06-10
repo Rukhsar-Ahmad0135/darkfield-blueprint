@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { SierpinskiLogo } from "./Visuals";
+import { BrandLogo } from "./BrandLogo";
 
 const links = [
   { to: "/", label: "Home" },
@@ -32,8 +32,8 @@ export function Navbar() {
       }`}
     >
       <div className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-4 lg:px-12">
-        <Link to="/" className="flex items-center gap-2.5">
-          <LogoMark />
+        <Link to="/" className="group flex items-center gap-3">
+          <BrandLogo className="h-9 w-9 transition-transform duration-500 group-hover:rotate-[8deg]" />
           <span className="text-mono text-[11px] uppercase tracking-[0.22em] text-foreground">
             Dark Field<span className="text-text-muted"> / Tech Labs</span>
           </span>
@@ -101,5 +101,5 @@ export function Navbar() {
 }
 
 export function LogoMark({ className = "" }: { className?: string }) {
-  return <SierpinskiLogo className={`size-7 ${className}`} rows={5} />;
+  return <BrandLogo className={`h-9 w-9 ${className}`} />;
 }
