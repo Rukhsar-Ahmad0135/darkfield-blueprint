@@ -420,8 +420,7 @@ function CareersCTA() {
 
 function BigCTA() {
   return (
-    <section className="relative overflow-hidden border-b border-hairline">
-      <GridBackdrop />
+    <section className="relative overflow-hidden border-b border-hairline bg-background">
       <div className="relative mx-auto max-w-[1400px] px-6 py-32 text-center lg:px-12 lg:py-48">
         <Eyebrow>
           <span className="mx-auto block">Contact</span>
