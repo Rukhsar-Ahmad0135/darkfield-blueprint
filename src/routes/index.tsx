@@ -43,43 +43,6 @@ function Home() {
     </SiteShell>
   );
 }
-  const { data: team } = useQuery({
-    queryKey: ["public-employees"],
-    queryFn: async () => {
-      const { data } = await supabase.from("employees").select("*").eq("is_active", true).order("display_order");
-      return data ?? [];
-    },
-  });
-  if (!team || team.length === 0) return null;
-  return (
-    <Section className="border-b border-hairline">
-      <Eyebrow>The Team</Eyebrow>
-      <h2 className="mt-6 max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">Operators, engineers, researchers.</h2>
-      <div className="mt-16 grid gap-px border border-hairline bg-hairline sm:grid-cols-2 lg:grid-cols-3">
-        {team.map((m) => (
-          <div key={m.id} className="flex flex-col gap-4 bg-background p-8">
-            <div className="flex items-start gap-4">
-              {m.photo_url ? (
-                <img src={m.photo_url} alt={m.full_name} className="size-16 border border-hairline object-cover" />
-              ) : (
-                <div className="flex size-16 items-center justify-center border border-hairline text-mono text-xs text-text-muted">
-                  {m.full_name.split(" ").map((p: string) => p[0]).join("").slice(0, 2)}
-                </div>
-              )}
-              <div>
-                <div className="font-medium">{m.full_name}</div>
-                <div className="text-sm text-muted-foreground">{m.position}</div>
-                {m.department && <div className="text-[11px] uppercase tracking-[0.18em] text-text-muted">{m.department}</div>}
-              </div>
-            </div>
-            {m.bio && <p className="text-sm text-muted-foreground">{m.bio}</p>}
-            {m.linkedin_url && <a href={m.linkedin_url} target="_blank" rel="noreferrer" className="mt-auto text-[11px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground">LinkedIn →</a>}
-          </div>
-        ))}
-      </div>
-    </Section>
-  );
-}
 
 function TeamSection() {
   const { data: team } = useQuery({
