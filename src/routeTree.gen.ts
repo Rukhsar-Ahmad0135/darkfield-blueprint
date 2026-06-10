@@ -22,8 +22,10 @@ import { Route as TechnologiesSlugRouteImport } from './routes/technologies.$slu
 import { Route as CareersSlugRouteImport } from './routes/careers.$slug'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated.admin'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated.admin.index'
+import { Route as AuthenticatedAdminOpportunitiesRouteImport } from './routes/_authenticated.admin.opportunities'
 import { Route as AuthenticatedAdminJobsRouteImport } from './routes/_authenticated.admin.jobs'
 import { Route as AuthenticatedAdminEmployeesRouteImport } from './routes/_authenticated.admin.employees'
+import { Route as AuthenticatedAdminCollaborationsRouteImport } from './routes/_authenticated.admin.collaborations'
 import { Route as AuthenticatedAdminApplicationsRouteImport } from './routes/_authenticated.admin.applications'
 
 const ServicesRoute = ServicesRouteImport.update({
@@ -90,6 +92,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminOpportunitiesRoute =
+  AuthenticatedAdminOpportunitiesRouteImport.update({
+    id: '/opportunities',
+    path: '/opportunities',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminJobsRoute = AuthenticatedAdminJobsRouteImport.update({
   id: '/jobs',
   path: '/jobs',
@@ -99,6 +107,12 @@ const AuthenticatedAdminEmployeesRoute =
   AuthenticatedAdminEmployeesRouteImport.update({
     id: '/employees',
     path: '/employees',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminCollaborationsRoute =
+  AuthenticatedAdminCollaborationsRouteImport.update({
+    id: '/collaborations',
+    path: '/collaborations',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminApplicationsRoute =
@@ -121,8 +135,10 @@ export interface FileRoutesByFullPath {
   '/careers/': typeof CareersIndexRoute
   '/technologies/': typeof TechnologiesIndexRoute
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
+  '/admin/collaborations': typeof AuthenticatedAdminCollaborationsRoute
   '/admin/employees': typeof AuthenticatedAdminEmployeesRoute
   '/admin/jobs': typeof AuthenticatedAdminJobsRoute
+  '/admin/opportunities': typeof AuthenticatedAdminOpportunitiesRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -137,8 +153,10 @@ export interface FileRoutesByTo {
   '/careers': typeof CareersIndexRoute
   '/technologies': typeof TechnologiesIndexRoute
   '/admin/applications': typeof AuthenticatedAdminApplicationsRoute
+  '/admin/collaborations': typeof AuthenticatedAdminCollaborationsRoute
   '/admin/employees': typeof AuthenticatedAdminEmployeesRoute
   '/admin/jobs': typeof AuthenticatedAdminJobsRoute
+  '/admin/opportunities': typeof AuthenticatedAdminOpportunitiesRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
@@ -156,8 +174,10 @@ export interface FileRoutesById {
   '/careers/': typeof CareersIndexRoute
   '/technologies/': typeof TechnologiesIndexRoute
   '/_authenticated/admin/applications': typeof AuthenticatedAdminApplicationsRoute
+  '/_authenticated/admin/collaborations': typeof AuthenticatedAdminCollaborationsRoute
   '/_authenticated/admin/employees': typeof AuthenticatedAdminEmployeesRoute
   '/_authenticated/admin/jobs': typeof AuthenticatedAdminJobsRoute
+  '/_authenticated/admin/opportunities': typeof AuthenticatedAdminOpportunitiesRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -175,8 +195,10 @@ export interface FileRouteTypes {
     | '/careers/'
     | '/technologies/'
     | '/admin/applications'
+    | '/admin/collaborations'
     | '/admin/employees'
     | '/admin/jobs'
+    | '/admin/opportunities'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -191,8 +213,10 @@ export interface FileRouteTypes {
     | '/careers'
     | '/technologies'
     | '/admin/applications'
+    | '/admin/collaborations'
     | '/admin/employees'
     | '/admin/jobs'
+    | '/admin/opportunities'
     | '/admin'
   id:
     | '__root__'
@@ -209,8 +233,10 @@ export interface FileRouteTypes {
     | '/careers/'
     | '/technologies/'
     | '/_authenticated/admin/applications'
+    | '/_authenticated/admin/collaborations'
     | '/_authenticated/admin/employees'
     | '/_authenticated/admin/jobs'
+    | '/_authenticated/admin/opportunities'
     | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -321,6 +347,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/opportunities': {
+      id: '/_authenticated/admin/opportunities'
+      path: '/opportunities'
+      fullPath: '/admin/opportunities'
+      preLoaderRoute: typeof AuthenticatedAdminOpportunitiesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/jobs': {
       id: '/_authenticated/admin/jobs'
       path: '/jobs'
@@ -335,6 +368,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminEmployeesRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/collaborations': {
+      id: '/_authenticated/admin/collaborations'
+      path: '/collaborations'
+      fullPath: '/admin/collaborations'
+      preLoaderRoute: typeof AuthenticatedAdminCollaborationsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/applications': {
       id: '/_authenticated/admin/applications'
       path: '/applications'
@@ -347,15 +387,19 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminApplicationsRoute: typeof AuthenticatedAdminApplicationsRoute
+  AuthenticatedAdminCollaborationsRoute: typeof AuthenticatedAdminCollaborationsRoute
   AuthenticatedAdminEmployeesRoute: typeof AuthenticatedAdminEmployeesRoute
   AuthenticatedAdminJobsRoute: typeof AuthenticatedAdminJobsRoute
+  AuthenticatedAdminOpportunitiesRoute: typeof AuthenticatedAdminOpportunitiesRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminApplicationsRoute: AuthenticatedAdminApplicationsRoute,
+  AuthenticatedAdminCollaborationsRoute: AuthenticatedAdminCollaborationsRoute,
   AuthenticatedAdminEmployeesRoute: AuthenticatedAdminEmployeesRoute,
   AuthenticatedAdminJobsRoute: AuthenticatedAdminJobsRoute,
+  AuthenticatedAdminOpportunitiesRoute: AuthenticatedAdminOpportunitiesRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 

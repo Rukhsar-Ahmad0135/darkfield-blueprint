@@ -1,14 +1,16 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { type ReactNode } from "react";
-import { LogOut, LayoutDashboard, Briefcase, Inbox, Users, ExternalLink } from "lucide-react";
+import { LogOut, LayoutDashboard, Briefcase, Inbox, Users, ExternalLink, Sparkles, Handshake } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { SierpinskiLogo } from "@/components/site/Visuals";
+import { BrandLogo } from "@/components/site/BrandLogo";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
 const NAV = [
   { to: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
   { to: "/admin/jobs", label: "Jobs", icon: Briefcase, exact: false },
+  { to: "/admin/opportunities", label: "Opportunities", icon: Sparkles, exact: false },
+  { to: "/admin/collaborations", label: "Collaborations", icon: Handshake, exact: false },
   { to: "/admin/applications", label: "Applications", icon: Inbox, exact: false },
   { to: "/admin/employees", label: "Employees", icon: Users, exact: false },
 ] as const;
@@ -30,7 +32,7 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
     <div className="min-h-screen bg-background text-foreground">
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-hairline bg-surface md:flex">
         <Link to="/admin" className="flex items-center gap-3 border-b border-hairline px-6 py-5">
-          <SierpinskiLogo className="size-7 text-foreground" rows={4} />
+          <BrandLogo className="h-8 w-8" />
           <div>
             <div className="text-mono text-[10px] uppercase tracking-[0.22em]">Dark Field</div>
             <div className="text-mono text-[10px] uppercase tracking-[0.22em] text-text-muted">Admin Console</div>
