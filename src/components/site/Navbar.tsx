@@ -53,7 +53,15 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="hidden md:block">
+        <div className="hidden items-center gap-3 md:flex">
+          <Link
+            to="/admin"
+            className="inline-flex items-center gap-2 border border-yellow-500/50 bg-yellow-500/10 px-3 py-2 text-[11px] uppercase tracking-[0.18em] text-yellow-300 transition-colors hover:bg-yellow-500/20"
+            title="Temporary preview link — remove before launch"
+          >
+            <span className="inline-block size-1.5 animate-pulse rounded-full bg-yellow-400" />
+            Admin Preview
+          </Link>
           <Link
             to="/careers"
             className="group inline-flex items-center gap-2 border border-hairline px-4 py-2 text-[12px] uppercase tracking-[0.18em] transition-colors hover:bg-foreground hover:text-background"
