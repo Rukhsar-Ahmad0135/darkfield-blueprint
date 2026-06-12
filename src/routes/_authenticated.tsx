@@ -1,12 +1,11 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { supabase } from "@/integrations/supabase/client";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
+// DEV PREVIEW: auth gate temporarily disabled so the admin UI can be reviewed
+// without signing in. Re-enable before launch by restoring the getUser() check.
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
   beforeLoad: async () => {
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) throw redirect({ to: "/auth" });
-    return { user: data.user };
+    return { user: null as unknown as { id: string } };
   },
   component: () => <Outlet />,
 });
