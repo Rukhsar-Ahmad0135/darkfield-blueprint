@@ -123,7 +123,9 @@ function EmpModal({ initial, isNew, onClose, onSaved }: {
         const up = await supabase.storage.from("employees").upload(path, file, { upsert: false });
         if (up.error) throw up.error;
         photo_path = path;
-        photo_url = supabase.storage.from("employees").getPublicUrl(path).data.publicUrl;
+        const signed = await supabase.storage.from("employees").createSignedUrl(path, 60 * 60 * 24 * 3650);
+        if (signed.error || !signed.data) throw signed.error ?? new Error("Could not sign URL");
+        photo_url = signed.data.signedUrl;
       }
       const payload = {
         full_name: form.full_name,
