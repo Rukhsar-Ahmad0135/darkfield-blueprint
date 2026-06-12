@@ -95,9 +95,17 @@ export function Navbar() {
               </Link>
             ))}
             <Link
+              to="/admin"
+              onClick={() => setOpen(false)}
+              className="mt-4 inline-flex items-center justify-center gap-2 border border-yellow-500/50 bg-yellow-500/10 px-4 py-3 text-[12px] uppercase tracking-[0.18em] text-yellow-300"
+            >
+              <span className="inline-block size-1.5 animate-pulse rounded-full bg-yellow-400" />
+              Admin Preview
+            </Link>
+            <Link
               to="/careers"
               onClick={() => setOpen(false)}
-              className="mt-4 inline-flex items-center justify-center border border-foreground px-4 py-3 text-[12px] uppercase tracking-[0.18em]"
+              className="mt-3 inline-flex items-center justify-center border border-foreground px-4 py-3 text-[12px] uppercase tracking-[0.18em]"
             >
               Apply →
             </Link>
