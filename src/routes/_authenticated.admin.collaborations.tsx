@@ -139,8 +139,9 @@ function Modal({ initial, isNew, onClose, onSaved }: { initial: Collab; isNew: b
       const path = `collaborations/${crypto.randomUUID()}.${ext}`;
       const { error } = await supabase.storage.from("employees").upload(path, file, { upsert: true, contentType: file.type });
       if (error) throw error;
-      const { data } = supabase.storage.from("employees").getPublicUrl(path);
-      setForm((f) => ({ ...f, logo_url: data.publicUrl }));
+      const { data, error: signErr } = await supabase.storage.from("employees").createSignedUrl(path, 60 * 60 * 24 * 3650);
+      if (signErr || !data) throw signErr ?? new Error("Could not sign URL");
+      setForm((f) => ({ ...f, logo_url: data.signedUrl }));
       toast.success("Logo uploaded.");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Upload failed");
