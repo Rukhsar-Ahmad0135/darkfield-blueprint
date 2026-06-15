@@ -5,11 +5,14 @@ import { SERVICES } from "@/lib/site-data";
 export const Route = createFileRoute("/services")({
   head: () => ({
     meta: [
-      { title: "Services — Dark Field Tech Labs" },
-      { name: "description", content: "Elite technical consulting and turnkey R&D for high-stakes environments." },
-      { property: "og:title", content: "Services — DFTL" },
-      { property: "og:description", content: "Embedded, Software & AI, RDaaS, and Additive Manufacturing." },
+      { title: "Services — Embedded, AI, R&D & Manufacturing | Dark Field Tech Labs" },
+      { name: "description", content: "Custom embedded systems, AI software, contract R&D, and additive manufacturing for defense, enterprise, and research clients. Engineered for high-stakes environments." },
+      { name: "keywords", content: "embedded systems development, AI engineering, R&D as a service, contract research, additive manufacturing, custom firmware, edge AI" },
+      { property: "og:title", content: "Services — Dark Field Tech Labs" },
+      { property: "og:description", content: "Embedded systems, AI, contract R&D, and additive manufacturing — built to ship and survive in the field." },
+      { property: "og:url", content: "https://darkfield-blueprint.lovable.app/services" },
     ],
+    links: [{ rel: "canonical", href: "https://darkfield-blueprint.lovable.app/services" }],
   }),
   component: ServicesPage,
 });
@@ -20,13 +23,15 @@ function ServicesPage() {
       <Section className="border-b border-hairline">
         <Eyebrow>Services</Eyebrow>
         <h1 className="mt-6 max-w-4xl text-5xl font-semibold tracking-tight sm:text-7xl">
-          Elite technical consulting. Turnkey R&D.
+          Engineering services built for the hardest problems.
         </h1>
         <p className="mt-8 max-w-2xl text-lg text-muted-foreground">
-          Four service lines, each grounded in the same research practice that powers our internal
-          platforms.
+          Four specialized service lines — embedded systems, AI software, contract R&D, and
+          additive manufacturing — backed by the same research practice that powers our internal
+          platforms. From prototype to production, we ship what we promise.
         </p>
       </Section>
+
 
       <Section className="!pt-0">
         <div className="grid gap-px border border-hairline bg-hairline sm:grid-cols-2">

@@ -5,11 +5,14 @@ import { RESEARCH_PROJECTS } from "@/lib/site-data";
 export const Route = createFileRoute("/research")({
   head: () => ({
     meta: [
-      { title: "Research — Dark Field Tech Labs" },
-      { name: "description", content: "Active research projects, publications, and future roadmap." },
-      { property: "og:title", content: "Research — DFTL" },
-      { property: "og:description", content: "Active research and innovation programs." },
+      { title: "Research & Innovation — Mesh, Zero-Trust & Spectrum | Dark Field Tech Labs" },
+      { name: "description", content: "Active research at Dark Field Tech Labs: dark-field mesh architecture, zero-trust edge attestation, self-healing spectrum allocation, and low-observable telemetry." },
+      { name: "keywords", content: "mesh network research, zero-trust attestation, spectrum allocation, low-observable telemetry, R&D programs, deep tech research" },
+      { property: "og:title", content: "Research — Dark Field Tech Labs" },
+      { property: "og:description", content: "Active research programs in signal physics, distributed protocols, and applied AI." },
+      { property: "og:url", content: "https://darkfield-blueprint.lovable.app/research" },
     ],
+    links: [{ rel: "canonical", href: "https://darkfield-blueprint.lovable.app/research" }],
   }),
   component: ResearchPage,
 });
@@ -20,13 +23,14 @@ function ResearchPage() {
       <Section className="border-b border-hairline">
         <Eyebrow>Research & Innovation</Eyebrow>
         <h1 className="mt-6 max-w-4xl text-5xl font-semibold tracking-tight sm:text-7xl">
-          Programs in motion.
+          Research that ships. Programs in motion.
         </h1>
         <p className="mt-8 max-w-2xl text-lg text-muted-foreground">
-          A selection of active and exploratory research efforts. Our work spans signal physics,
-          distributed protocols, and applied AI.
+          Active and exploratory programs spanning signal physics, distributed mesh protocols, and
+          applied AI — engineered for real-world deployment, not just publication.
         </p>
       </Section>
+
 
       <Section className="border-b border-hairline">
         <Eyebrow>Active Projects</Eyebrow>

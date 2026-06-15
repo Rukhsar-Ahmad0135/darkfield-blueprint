@@ -6,11 +6,14 @@ import { ArrowUpRight } from "lucide-react";
 export const Route = createFileRoute("/technologies/")({
   head: () => ({
     meta: [
-      { title: "Technologies — Dark Field Tech Labs" },
-      { name: "description", content: "Wireless, Stealth, Surveillance, and Core Systems." },
-      { property: "og:title", content: "Technologies — DFTL" },
-      { property: "og:description", content: "Four vertical pillars built for performance-critical challenges." },
+      { title: "Technologies — Wireless, Stealth, Surveillance & Mesh | Dark Field Tech Labs" },
+      { name: "description", content: "Explore Dark Field Tech Labs' four core technology pillars: wireless networks, stealth systems, surveillance & sensor fusion, and zero-trust core infrastructure." },
+      { name: "keywords", content: "wireless technology, stealth technology, mesh networks, surveillance systems, sensor fusion, zero-trust infrastructure, non-line-of-sight telemetry, signature reduction" },
+      { property: "og:title", content: "Technologies — Dark Field Tech Labs" },
+      { property: "og:description", content: "Four engineered pillars for adversarial and performance-critical environments." },
+      { property: "og:url", content: "https://darkfield-blueprint.lovable.app/technologies" },
     ],
+    links: [{ rel: "canonical", href: "https://darkfield-blueprint.lovable.app/technologies" }],
   }),
   component: TechnologiesPage,
 });
@@ -21,13 +24,15 @@ function TechnologiesPage() {
       <Section className="border-b border-hairline">
         <Eyebrow>Technologies</Eyebrow>
         <h1 className="mt-6 max-w-4xl text-5xl font-semibold tracking-tight sm:text-7xl">
-          Four pillars built to solve adversarial problems.
+          Wireless, stealth, surveillance, and mesh — engineered to win.
         </h1>
         <p className="mt-8 max-w-2xl text-lg text-muted-foreground">
-          Each pillar operates as an independent practice and as a layer of the same operating
-          philosophy — physics-first, deployment-aware, and zero-trust by default.
+          Four core technology pillars, each an independent practice and a layer of one operating
+          philosophy: physics-first, deployment-aware, and zero-trust by default. Built for the
+          environments where off-the-shelf systems fail.
         </p>
       </Section>
+
 
       <Section className="!pt-0">
         <div className="grid gap-px border border-hairline bg-hairline lg:grid-cols-2">

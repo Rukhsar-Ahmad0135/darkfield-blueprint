@@ -11,19 +11,27 @@ import { ArrowUpRight } from "lucide-react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Dark Field Tech Labs — Engineering Intelligent Systems" },
+      { title: "Dark Field Tech Labs — Wireless, Stealth & Mesh Technology R&D" },
       {
         name: "description",
         content:
-          "Dark Field Tech Labs builds wireless, stealth, surveillance, and core systems for high-stakes environments.",
+          "Dark Field Tech Labs engineers wireless, stealth, mesh, and surveillance systems for defense, enterprise, and research. Resilient infrastructure where centralized networks fail.",
       },
-      { property: "og:title", content: "Dark Field Tech Labs" },
+      {
+        name: "keywords",
+        content:
+          "dark field tech labs, wireless technology, stealth technology, mesh networks, surveillance systems, embedded systems, R&D as a service, edge AI, zero-trust architecture, defense technology",
+      },
+      { property: "og:title", content: "Dark Field Tech Labs — Engineering Intelligent Systems" },
       {
         property: "og:description",
-        content: "Engineering intelligent systems for research and enterprise.",
+        content: "Wireless, stealth, mesh, and surveillance R&D for the world's hardest environments.",
       },
+      { property: "og:url", content: "https://darkfield-blueprint.lovable.app/" },
     ],
+    links: [{ rel: "canonical", href: "https://darkfield-blueprint.lovable.app/" }],
   }),
+
   component: Home,
 });
 
@@ -195,27 +203,30 @@ function Hero() {
           </Reveal>
           <Reveal delay={0.08}>
             <h1 className="mt-8 text-[44px] font-semibold leading-[1.02] tracking-[-0.02em] sm:text-[64px] lg:text-[88px]">
-              Engineering<br />
-              <span className="text-text-muted">intelligent</span><br />
-              systems.
+              Wireless. Stealth.<br />
+              <span className="text-text-muted">Mesh.</span><br />
+              Engineered to win.
             </h1>
           </Reveal>
           <Reveal delay={0.18}>
             <p className="mt-8 max-w-xl text-base text-muted-foreground sm:text-lg">
-              Four vertical pillars — Wireless, Stealth, Surveillance, Systems — built to solve adversarial and performance-critical challenges where centralized infrastructure fails.
+              Dark Field Tech Labs builds resilient wireless, stealth, surveillance, and mesh systems
+              for environments where conventional infrastructure breaks down — defense, critical
+              infrastructure, autonomous fleets, and frontier research.
             </p>
           </Reveal>
           <Reveal delay={0.26}>
             <div className="mt-10 flex flex-wrap items-center gap-3">
               <Link to="/technologies" className="group inline-flex items-center gap-2 bg-foreground px-6 py-3.5 text-[12px] uppercase tracking-[0.2em] text-background hover:opacity-90">
-                Explore Technologies
+                Explore Our Technology
                 <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
               <Link to="/contact" className="inline-flex items-center gap-2 border border-hairline px-6 py-3.5 text-[12px] uppercase tracking-[0.2em] hover:border-foreground">
-                Contact Lab
+                Talk to an Engineer
               </Link>
             </div>
           </Reveal>
+
           <Reveal delay={0.34}>
             <dl className="mt-16 grid max-w-lg grid-cols-3 gap-6 border-t border-hairline pt-8">
               {[["04", "Core Pillars"], ["R&D", "Mandate"], ["Global", "Architecture"]].map(([k, v]) => (
@@ -252,17 +263,19 @@ function About() {
     <Section className="border-b border-hairline">
       <div className="grid gap-12 lg:grid-cols-12">
         <div className="lg:col-span-4">
-          <Eyebrow>About</Eyebrow>
+          <Eyebrow>About Dark Field Tech Labs</Eyebrow>
           <h2 className="mt-6 text-3xl font-semibold tracking-tight sm:text-4xl">
-            A research lab posing as a product company.
+            A deep-tech research lab building the systems others can't.
           </h2>
         </div>
         <div className="lg:col-span-7 lg:col-start-6">
           <p className="text-lg text-muted-foreground">
-            We build next-generation intelligent systems for research and enterprise. Our mandate
-            spans signal physics, embedded silicon, distributed protocols, and operator-grade
-            software — synthesized into platforms that ship.
+            We engineer next-generation intelligent systems for governments, enterprises, and
+            research institutions. Our work spans signal physics, embedded silicon, distributed
+            mesh protocols, and operator-grade software — synthesized into platforms that ship
+            on time and survive in the field.
           </p>
+
           <div className="mt-12 grid gap-px border border-hairline bg-hairline sm:grid-cols-3">
             {[
               ["04", "Core Technologies"],
@@ -397,11 +410,11 @@ function CareersCTA() {
         <div className="lg:col-span-7">
           <Eyebrow>Careers</Eyebrow>
           <h2 className="mt-6 text-3xl font-semibold tracking-tight sm:text-5xl">
-            We're hiring engineers and researchers.
+            Build the technology the future depends on.
           </h2>
           <p className="mt-4 max-w-xl text-muted-foreground">
-            Operators, researchers, embedded engineers, and ML practitioners who like
-            consequential problems and small teams.
+            Join a small, senior team of engineers, researchers, and operators solving problems
+            that matter — with the autonomy and resources to do your best work.
           </p>
         </div>
         <div className="flex items-end lg:col-span-5 lg:justify-end">
@@ -423,11 +436,15 @@ function BigCTA() {
     <section className="relative overflow-hidden border-b border-hairline bg-background">
       <div className="relative mx-auto max-w-[1400px] px-6 py-32 text-center lg:px-12 lg:py-48">
         <Eyebrow>
-          <span className="mx-auto block">Contact</span>
+          <span className="mx-auto block">Partner With Us</span>
         </Eyebrow>
         <h2 className="mx-auto mt-8 max-w-4xl text-5xl font-semibold tracking-tight sm:text-7xl">
-          Let's build the <span className="text-text-muted italic">future</span>.
+          Have a problem nobody else can solve? <span className="text-text-muted italic">Let's talk.</span>
         </h2>
+        <p className="mx-auto mt-6 max-w-2xl text-muted-foreground">
+          From contract R&D to long-term partnerships, we work with teams who need real engineering
+          — not slideware. Tell us what you're up against.
+        </p>
         <div className="mt-10 flex justify-center">
           <Link
             to="/contact"
@@ -441,3 +458,4 @@ function BigCTA() {
     </section>
   );
 }
+
