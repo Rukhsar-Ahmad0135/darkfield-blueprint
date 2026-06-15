@@ -203,27 +203,30 @@ function Hero() {
           </Reveal>
           <Reveal delay={0.08}>
             <h1 className="mt-8 text-[44px] font-semibold leading-[1.02] tracking-[-0.02em] sm:text-[64px] lg:text-[88px]">
-              Engineering<br />
-              <span className="text-text-muted">intelligent</span><br />
-              systems.
+              Wireless. Stealth.<br />
+              <span className="text-text-muted">Mesh.</span><br />
+              Engineered to win.
             </h1>
           </Reveal>
           <Reveal delay={0.18}>
             <p className="mt-8 max-w-xl text-base text-muted-foreground sm:text-lg">
-              Four vertical pillars — Wireless, Stealth, Surveillance, Systems — built to solve adversarial and performance-critical challenges where centralized infrastructure fails.
+              Dark Field Tech Labs builds resilient wireless, stealth, surveillance, and mesh systems
+              for environments where conventional infrastructure breaks down — defense, critical
+              infrastructure, autonomous fleets, and frontier research.
             </p>
           </Reveal>
           <Reveal delay={0.26}>
             <div className="mt-10 flex flex-wrap items-center gap-3">
               <Link to="/technologies" className="group inline-flex items-center gap-2 bg-foreground px-6 py-3.5 text-[12px] uppercase tracking-[0.2em] text-background hover:opacity-90">
-                Explore Technologies
+                Explore Our Technology
                 <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
               <Link to="/contact" className="inline-flex items-center gap-2 border border-hairline px-6 py-3.5 text-[12px] uppercase tracking-[0.2em] hover:border-foreground">
-                Contact Lab
+                Talk to an Engineer
               </Link>
             </div>
           </Reveal>
+
           <Reveal delay={0.34}>
             <dl className="mt-16 grid max-w-lg grid-cols-3 gap-6 border-t border-hairline pt-8">
               {[["04", "Core Pillars"], ["R&D", "Mandate"], ["Global", "Architecture"]].map(([k, v]) => (
