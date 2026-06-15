@@ -5,11 +5,14 @@ import { SiteShell, Section, Eyebrow } from "@/components/site/SiteShell";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — Dark Field Tech Labs" },
-      { name: "description", content: "Get in touch with Dark Field Tech Labs." },
-      { property: "og:title", content: "Contact — DFTL" },
-      { property: "og:description", content: "Start a conversation with our team." },
+      { title: "Contact — Start a Project With Dark Field Tech Labs" },
+      { name: "description", content: "Talk to Dark Field Tech Labs about contract R&D, partnerships, and engineering services. Qualified inquiries answered within two business days." },
+      { name: "keywords", content: "contact dark field tech labs, R&D partnerships, contract engineering, deep tech consulting" },
+      { property: "og:title", content: "Contact — Dark Field Tech Labs" },
+      { property: "og:description", content: "Start a conversation with our engineering team." },
+      { property: "og:url", content: "https://darkfield-blueprint.lovable.app/contact" },
     ],
+    links: [{ rel: "canonical", href: "https://darkfield-blueprint.lovable.app/contact" }],
   }),
   component: ContactPage,
 });
@@ -22,13 +25,15 @@ function ContactPage() {
       <Section className="border-b border-hairline">
         <Eyebrow>Contact</Eyebrow>
         <h1 className="mt-6 max-w-4xl text-5xl font-semibold tracking-tight sm:text-7xl">
-          Start a <span className="text-text-muted italic">conversation</span>.
+          Tell us what you're <span className="text-text-muted italic">building</span>.
         </h1>
         <p className="mt-8 max-w-xl text-lg text-muted-foreground">
-          Tell us what you're working on. We respond to qualified inquiries within two business
-          days.
+          Whether it's a contract research program, a custom embedded platform, or a multi-year
+          partnership — share the problem and we'll get back to qualified inquiries within two
+          business days.
         </p>
       </Section>
+
 
       <Section>
         <div className="grid gap-16 lg:grid-cols-12">
