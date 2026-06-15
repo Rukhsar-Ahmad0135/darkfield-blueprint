@@ -132,9 +132,8 @@ function EmpModal({ initial, isNew, onClose, onSaved }: {
         position: form.position,
         department: form.department || null,
         bio: form.bio || null,
-        bio: form.bio || null,
-
         linkedin_url: form.linkedin_url || null,
+
         display_order: Number(form.display_order) || 0,
         is_active: form.is_active,
         photo_url, photo_path,
@@ -174,7 +173,7 @@ function EmpModal({ initial, isNew, onClose, onSaved }: {
             <Field label="Position" value={form.position} onChange={(v) => setForm({ ...form, position: v })} required />
             <Field label="Department" value={form.department ?? ""} onChange={(v) => setForm({ ...form, department: v })} />
             <Field label="LinkedIn URL" value={form.linkedin_url ?? ""} onChange={(v) => setForm({ ...form, linkedin_url: v })} />
-            <Field label="LinkedIn URL" value={form.linkedin_url ?? ""} onChange={(v) => setForm({ ...form, linkedin_url: v })} />
+
             <Field label="Display Order" type="number" value={String(form.display_order)} onChange={(v) => setForm({ ...form, display_order: Number(v) || 0 })} />
           </div>
           <TextArea label="Short Bio" value={form.bio ?? ""} onChange={(v) => setForm({ ...form, bio: v })} rows={4} />
