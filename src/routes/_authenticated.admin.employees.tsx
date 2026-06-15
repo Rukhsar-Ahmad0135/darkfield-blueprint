@@ -19,15 +19,15 @@ type Employee = {
   photo_url: string | null;
   photo_path: string | null;
   linkedin_url: string | null;
-  email: string | null;
   display_order: number;
   is_active: boolean;
 };
 
 const emptyEmp: Omit<Employee, "id"> = {
   full_name: "", position: "", department: "", bio: "", photo_url: null, photo_path: null,
-  linkedin_url: "", email: "", display_order: 0, is_active: true,
+  linkedin_url: "", display_order: 0, is_active: true,
 };
+
 
 function EmployeesAdmin() {
   const qc = useQueryClient();
@@ -133,7 +133,7 @@ function EmpModal({ initial, isNew, onClose, onSaved }: {
         department: form.department || null,
         bio: form.bio || null,
         linkedin_url: form.linkedin_url || null,
-        email: form.email || null,
+
         display_order: Number(form.display_order) || 0,
         is_active: form.is_active,
         photo_url, photo_path,
@@ -172,8 +172,8 @@ function EmpModal({ initial, isNew, onClose, onSaved }: {
             <Field label="Full Name" value={form.full_name} onChange={(v) => setForm({ ...form, full_name: v })} required />
             <Field label="Position" value={form.position} onChange={(v) => setForm({ ...form, position: v })} required />
             <Field label="Department" value={form.department ?? ""} onChange={(v) => setForm({ ...form, department: v })} />
-            <Field label="Email (optional)" type="email" value={form.email ?? ""} onChange={(v) => setForm({ ...form, email: v })} />
             <Field label="LinkedIn URL" value={form.linkedin_url ?? ""} onChange={(v) => setForm({ ...form, linkedin_url: v })} />
+
             <Field label="Display Order" type="number" value={String(form.display_order)} onChange={(v) => setForm({ ...form, display_order: Number(v) || 0 })} />
           </div>
           <TextArea label="Short Bio" value={form.bio ?? ""} onChange={(v) => setForm({ ...form, bio: v })} rows={4} />

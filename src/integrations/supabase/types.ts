@@ -127,7 +127,6 @@ export type Database = {
           created_at: string
           department: string | null
           display_order: number
-          email: string | null
           full_name: string
           id: string
           is_active: boolean
@@ -142,7 +141,6 @@ export type Database = {
           created_at?: string
           department?: string | null
           display_order?: number
-          email?: string | null
           full_name: string
           id?: string
           is_active?: boolean
@@ -157,7 +155,6 @@ export type Database = {
           created_at?: string
           department?: string | null
           display_order?: number
-          email?: string | null
           full_name?: string
           id?: string
           is_active?: boolean
