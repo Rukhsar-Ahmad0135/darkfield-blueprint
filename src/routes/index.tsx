@@ -263,17 +263,19 @@ function About() {
     <Section className="border-b border-hairline">
       <div className="grid gap-12 lg:grid-cols-12">
         <div className="lg:col-span-4">
-          <Eyebrow>About</Eyebrow>
+          <Eyebrow>About Dark Field Tech Labs</Eyebrow>
           <h2 className="mt-6 text-3xl font-semibold tracking-tight sm:text-4xl">
-            A research lab posing as a product company.
+            A deep-tech research lab building the systems others can't.
           </h2>
         </div>
         <div className="lg:col-span-7 lg:col-start-6">
           <p className="text-lg text-muted-foreground">
-            We build next-generation intelligent systems for research and enterprise. Our mandate
-            spans signal physics, embedded silicon, distributed protocols, and operator-grade
-            software — synthesized into platforms that ship.
+            We engineer next-generation intelligent systems for governments, enterprises, and
+            research institutions. Our work spans signal physics, embedded silicon, distributed
+            mesh protocols, and operator-grade software — synthesized into platforms that ship
+            on time and survive in the field.
           </p>
+
           <div className="mt-12 grid gap-px border border-hairline bg-hairline sm:grid-cols-3">
             {[
               ["04", "Core Technologies"],
