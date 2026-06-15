@@ -306,7 +306,51 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      employees_public: {
+        Row: {
+          bio: string | null
+          created_at: string | null
+          department: string | null
+          display_order: number | null
+          full_name: string | null
+          id: string | null
+          is_active: boolean | null
+          linkedin_url: string | null
+          photo_path: string | null
+          photo_url: string | null
+          position: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string | null
+          department?: string | null
+          display_order?: number | null
+          full_name?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          linkedin_url?: string | null
+          photo_path?: string | null
+          photo_url?: string | null
+          position?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string | null
+          department?: string | null
+          display_order?: number | null
+          full_name?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          linkedin_url?: string | null
+          photo_path?: string | null
+          photo_url?: string | null
+          position?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       claim_first_admin: { Args: never; Returns: boolean }
