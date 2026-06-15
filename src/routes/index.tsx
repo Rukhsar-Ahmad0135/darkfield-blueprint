@@ -11,19 +11,27 @@ import { ArrowUpRight } from "lucide-react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Dark Field Tech Labs — Engineering Intelligent Systems" },
+      { title: "Dark Field Tech Labs — Wireless, Stealth & Mesh Technology R&D" },
       {
         name: "description",
         content:
-          "Dark Field Tech Labs builds wireless, stealth, surveillance, and core systems for high-stakes environments.",
+          "Dark Field Tech Labs engineers wireless, stealth, mesh, and surveillance systems for defense, enterprise, and research. Resilient infrastructure where centralized networks fail.",
       },
-      { property: "og:title", content: "Dark Field Tech Labs" },
+      {
+        name: "keywords",
+        content:
+          "dark field tech labs, wireless technology, stealth technology, mesh networks, surveillance systems, embedded systems, R&D as a service, edge AI, zero-trust architecture, defense technology",
+      },
+      { property: "og:title", content: "Dark Field Tech Labs — Engineering Intelligent Systems" },
       {
         property: "og:description",
-        content: "Engineering intelligent systems for research and enterprise.",
+        content: "Wireless, stealth, mesh, and surveillance R&D for the world's hardest environments.",
       },
+      { property: "og:url", content: "https://darkfield-blueprint.lovable.app/" },
     ],
+    links: [{ rel: "canonical", href: "https://darkfield-blueprint.lovable.app/" }],
   }),
+
   component: Home,
 });
 
