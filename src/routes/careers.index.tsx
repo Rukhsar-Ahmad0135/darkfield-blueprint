@@ -10,11 +10,14 @@ const FILTERS = ["All", "Full Time", "Internship", "Remote", "On-site", "Hybrid"
 export const Route = createFileRoute("/careers/")({
   head: () => ({
     meta: [
-      { title: "Careers — Dark Field Tech Labs" },
-      { name: "description", content: "Open roles for engineers and researchers at Dark Field Tech Labs." },
-      { property: "og:title", content: "Careers — DFTL" },
-      { property: "og:description", content: "Engineers and researchers wanted." },
+      { title: "Careers — Engineering & Research Jobs | Dark Field Tech Labs" },
+      { name: "description", content: "Open engineering and research roles at Dark Field Tech Labs. Work on wireless, stealth, mesh, and AI systems with small senior teams and real hardware." },
+      { name: "keywords", content: "engineering jobs, research jobs, embedded engineer, AI engineer, deep tech careers, wireless engineering jobs, R&D careers" },
+      { property: "og:title", content: "Careers — Dark Field Tech Labs" },
+      { property: "og:description", content: "Build the technology the future depends on. Open roles for engineers and researchers." },
+      { property: "og:url", content: "https://darkfield-blueprint.lovable.app/careers" },
     ],
+    links: [{ rel: "canonical", href: "https://darkfield-blueprint.lovable.app/careers" }],
   }),
   component: CareersPage,
 });
@@ -38,9 +41,10 @@ function CareersPage() {
     <SiteShell>
       <Section className="border-b border-hairline">
         <Eyebrow>Careers</Eyebrow>
-        <h1 className="mt-6 max-w-4xl text-5xl font-semibold tracking-tight sm:text-7xl">Engineers and researchers for consequential problems.</h1>
-        <p className="mt-8 max-w-2xl text-lg text-muted-foreground">Small teams. High autonomy. Real hardware. We hire for taste, depth, and the appetite to ship things that matter.</p>
+        <h1 className="mt-6 max-w-4xl text-5xl font-semibold tracking-tight sm:text-7xl">Build technology the future depends on.</h1>
+        <p className="mt-8 max-w-2xl text-lg text-muted-foreground">Small senior teams. High autonomy. Real hardware and real-world stakes. We hire engineers and researchers who want their work to ship — and to matter.</p>
       </Section>
+
 
       <Section>
         <div className="flex flex-wrap items-center gap-2 border-b border-hairline pb-6">
