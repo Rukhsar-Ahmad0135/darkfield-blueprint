@@ -19,15 +19,15 @@ type Employee = {
   photo_url: string | null;
   photo_path: string | null;
   linkedin_url: string | null;
-  email: string | null;
   display_order: number;
   is_active: boolean;
 };
 
 const emptyEmp: Omit<Employee, "id"> = {
   full_name: "", position: "", department: "", bio: "", photo_url: null, photo_path: null,
-  linkedin_url: "", email: "", display_order: 0, is_active: true,
+  linkedin_url: "", display_order: 0, is_active: true,
 };
+
 
 function EmployeesAdmin() {
   const qc = useQueryClient();
