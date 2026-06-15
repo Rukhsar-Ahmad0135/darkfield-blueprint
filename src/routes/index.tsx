@@ -410,11 +410,11 @@ function CareersCTA() {
         <div className="lg:col-span-7">
           <Eyebrow>Careers</Eyebrow>
           <h2 className="mt-6 text-3xl font-semibold tracking-tight sm:text-5xl">
-            We're hiring engineers and researchers.
+            Build the technology the future depends on.
           </h2>
           <p className="mt-4 max-w-xl text-muted-foreground">
-            Operators, researchers, embedded engineers, and ML practitioners who like
-            consequential problems and small teams.
+            Join a small, senior team of engineers, researchers, and operators solving problems
+            that matter — with the autonomy and resources to do your best work.
           </p>
         </div>
         <div className="flex items-end lg:col-span-5 lg:justify-end">
@@ -436,11 +436,15 @@ function BigCTA() {
     <section className="relative overflow-hidden border-b border-hairline bg-background">
       <div className="relative mx-auto max-w-[1400px] px-6 py-32 text-center lg:px-12 lg:py-48">
         <Eyebrow>
-          <span className="mx-auto block">Contact</span>
+          <span className="mx-auto block">Partner With Us</span>
         </Eyebrow>
         <h2 className="mx-auto mt-8 max-w-4xl text-5xl font-semibold tracking-tight sm:text-7xl">
-          Let's build the <span className="text-text-muted italic">future</span>.
+          Have a problem nobody else can solve? <span className="text-text-muted italic">Let's talk.</span>
         </h2>
+        <p className="mx-auto mt-6 max-w-2xl text-muted-foreground">
+          From contract R&D to long-term partnerships, we work with teams who need real engineering
+          — not slideware. Tell us what you're up against.
+        </p>
         <div className="mt-10 flex justify-center">
           <Link
             to="/contact"
@@ -454,3 +458,4 @@ function BigCTA() {
     </section>
   );
 }
+
