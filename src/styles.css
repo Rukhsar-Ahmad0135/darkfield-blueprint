@@ -33,46 +33,55 @@
   --color-surface-2: var(--surface-2);
   --color-hairline: var(--hairline);
   --color-text-muted: var(--text-muted);
+  --color-ember: var(--ember);
+  --color-ember-glow: var(--ember-glow);
+  --color-cosmic: var(--cosmic);
 
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
-  --font-display: "Inter", system-ui, sans-serif;
+  --font-display: "Instrument Serif", "Cormorant Garamond", Georgia, serif;
 }
 
 :root {
   --radius: 0.25rem;
 
-  --background: oklch(0 0 0);
-  --foreground: oklch(1 0 0);
+  /* Interstellar palette — deep space black, warm ember accretion glow */
+  --background: oklch(0.02 0.005 260);
+  --foreground: oklch(0.97 0.01 80);
 
-  --surface: oklch(0.04 0 0);
-  --surface-2: oklch(0.08 0 0);
-  --hairline: oklch(0.18 0 0);
-  --text-muted: oklch(0.45 0 0);
+  --surface: oklch(0.05 0.008 260);
+  --surface-2: oklch(0.09 0.012 260);
+  --hairline: oklch(0.22 0.015 60);
+  --text-muted: oklch(0.55 0.02 70);
 
-  --card: oklch(0.04 0 0);
-  --card-foreground: oklch(1 0 0);
-  --popover: oklch(0.04 0 0);
-  --popover-foreground: oklch(1 0 0);
+  --card: oklch(0.05 0.008 260);
+  --card-foreground: oklch(0.97 0.01 80);
+  --popover: oklch(0.05 0.008 260);
+  --popover-foreground: oklch(0.97 0.01 80);
 
-  --primary: oklch(1 0 0);
-  --primary-foreground: oklch(0 0 0);
-  --secondary: oklch(0.08 0 0);
-  --secondary-foreground: oklch(1 0 0);
-  --muted: oklch(0.08 0 0);
-  --muted-foreground: oklch(0.65 0 0);
-  --accent: oklch(0.12 0 0);
-  --accent-foreground: oklch(1 0 0);
+  /* Ember: the warm accretion-disk copper/amber */
+  --ember: oklch(0.78 0.15 55);
+  --ember-glow: oklch(0.85 0.17 65);
+  --cosmic: oklch(0.55 0.12 260);
+
+  --primary: oklch(0.78 0.15 55);
+  --primary-foreground: oklch(0.08 0.01 60);
+  --secondary: oklch(0.09 0.012 260);
+  --secondary-foreground: oklch(0.97 0.01 80);
+  --muted: oklch(0.09 0.012 260);
+  --muted-foreground: oklch(0.68 0.02 70);
+  --accent: oklch(0.14 0.02 60);
+  --accent-foreground: oklch(0.97 0.01 80);
   --destructive: oklch(0.55 0.2 27);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.18 0 0);
-  --input: oklch(0.18 0 0);
-  --ring: oklch(0.7 0 0);
+  --border: oklch(0.22 0.015 60);
+  --input: oklch(0.22 0.015 60);
+  --ring: oklch(0.78 0.15 55);
 }
 
 .dark {
-  --background: oklch(0 0 0);
-  --foreground: oklch(1 0 0);
+  --background: oklch(0.02 0.005 260);
+  --foreground: oklch(0.97 0.01 80);
 }
 
 @layer base {
@@ -80,7 +89,7 @@
     border-color: var(--color-border);
   }
   html {
-    background: #000;
+    background: #050507;
     color-scheme: dark;
   }
   body {
@@ -92,15 +101,20 @@
     text-rendering: optimizeLegibility;
   }
   ::selection {
-    background: #fff;
-    color: #000;
+    background: var(--ember);
+    color: #0a0705;
+  }
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.01em;
   }
 }
 
 @utility grid-bg {
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    linear-gradient(to right, rgba(230, 180, 120, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(230, 180, 120, 0.045) 1px, transparent 1px);
   background-size: 64px 64px;
 }
 
@@ -116,9 +130,30 @@
 @utility eyebrow {
   font-family: var(--font-mono);
   font-size: 11px;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--color-text-muted);
+  color: var(--color-ember);
+}
+
+@utility text-ember {
+  color: var(--color-ember);
+}
+
+@utility bg-ember {
+  background-color: var(--color-ember);
+}
+
+@utility ember-glow {
+  text-shadow:
+    0 0 20px color-mix(in oklab, var(--ember) 55%, transparent),
+    0 0 40px color-mix(in oklab, var(--ember-glow) 25%, transparent);
+}
+
+@utility cosmic-radial {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, color-mix(in oklab, var(--ember) 14%, transparent), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 100%, color-mix(in oklab, var(--cosmic) 18%, transparent), transparent 60%),
+    var(--background);
 }
 
 @keyframes fade-up {
@@ -133,6 +168,22 @@
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
 }
+@keyframes orbit-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes orbit-reverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+@keyframes disk-pulse {
+  0%, 100% { filter: blur(24px) brightness(1); }
+  50% { filter: blur(28px) brightness(1.15); }
+}
 
 @utility animate-fade-up {
   animation: fade-up 0.7s ease-out both;
@@ -140,4 +191,16 @@
 @utility animate-draw {
   stroke-dasharray: 1000;
   animation: draw 2.4s ease-out forwards;
+}
+@utility animate-orbit-slow {
+  animation: orbit-slow 60s linear infinite;
+}
+@utility animate-orbit-reverse {
+  animation: orbit-reverse 90s linear infinite;
+}
+@utility animate-twinkle {
+  animation: twinkle 4s ease-in-out infinite;
+}
+@utility animate-disk-pulse {
+  animation: disk-pulse 8s ease-in-out infinite;
 }
