@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { SiteShell, Section, Eyebrow } from "@/components/site/SiteShell";
 import { MeshDiagram } from "@/components/site/Visuals";
-import { BrandLogo } from "@/components/site/BrandLogo";
+import { BlackHole } from "@/components/site/Cosmic";
 import { Reveal } from "@/components/site/Reveal";
 import { TECHNOLOGIES, SERVICES } from "@/lib/site-data";
 import { supabase } from "@/integrations/supabase/client";
@@ -195,33 +195,41 @@ function OpportunitiesPreview() {
 
 function Hero() {
   return (
-    <section className="relative overflow-hidden border-b border-hairline bg-background">
+    <section className="relative overflow-hidden border-b border-hairline cosmic-radial">
+      {/* Faint horizon gradient at bottom */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
       <div className="relative mx-auto grid max-w-[1400px] gap-16 px-6 pb-32 pt-24 lg:grid-cols-12 lg:px-12 lg:pt-32">
         <div className="lg:col-span-7">
           <Reveal>
-            <Eyebrow>Dark Field / Tech Labs · est. 2026</Eyebrow>
+            <Eyebrow>Dark Field / Tech Labs · est. 2026 · UK</Eyebrow>
           </Reveal>
           <Reveal delay={0.08}>
-            <h1 className="mt-8 text-[44px] font-semibold leading-[1.02] tracking-[-0.02em] sm:text-[64px] lg:text-[88px]">
-              Wireless. Stealth.<br />
-              <span className="text-text-muted">Mesh.</span><br />
-              Engineered to win.
+            <h1 className="mt-8 font-display text-[48px] leading-[1.02] tracking-[-0.02em] sm:text-[72px] lg:text-[96px]">
+              Beyond the <em className="italic text-ember ember-glow">event horizon</em>
+              <br />
+              of engineering.
             </h1>
           </Reveal>
           <Reveal delay={0.18}>
             <p className="mt-8 max-w-xl text-base text-muted-foreground sm:text-lg">
-              Dark Field Tech Labs builds resilient wireless, stealth, surveillance, and mesh systems
-              for environments where conventional infrastructure breaks down — defense, critical
-              infrastructure, autonomous fleets, and frontier research.
+              Dark Field Tech Labs builds resilient wireless, stealth, surveillance and mesh
+              systems for environments where conventional infrastructure breaks down — defense,
+              critical infrastructure, autonomous fleets, and frontier research.
             </p>
           </Reveal>
           <Reveal delay={0.26}>
             <div className="mt-10 flex flex-wrap items-center gap-3">
-              <Link to="/technologies" className="group inline-flex items-center gap-2 bg-foreground px-6 py-3.5 text-[12px] uppercase tracking-[0.2em] text-background hover:opacity-90">
+              <Link
+                to="/technologies"
+                className="group inline-flex items-center gap-2 bg-ember px-6 py-3.5 text-[12px] uppercase tracking-[0.2em] text-primary-foreground hover:opacity-90"
+              >
                 Explore Our Technology
                 <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
-              <Link to="/contact" className="inline-flex items-center gap-2 border border-hairline px-6 py-3.5 text-[12px] uppercase tracking-[0.2em] hover:border-foreground">
+              <Link
+                to="/contact"
+                className="inline-flex items-center gap-2 border border-hairline px-6 py-3.5 text-[12px] uppercase tracking-[0.2em] hover:border-ember hover:text-ember"
+              >
                 Talk to an Engineer
               </Link>
             </div>
@@ -231,7 +239,7 @@ function Hero() {
             <dl className="mt-16 grid max-w-lg grid-cols-3 gap-6 border-t border-hairline pt-8">
               {[["04", "Core Pillars"], ["R&D", "Mandate"], ["Global", "Architecture"]].map(([k, v]) => (
                 <div key={v}>
-                  <dt className="text-mono text-[22px] font-medium">{k}</dt>
+                  <dt className="text-mono text-[22px] font-medium text-ember">{k}</dt>
                   <dd className="mt-1 text-[11px] uppercase tracking-[0.2em] text-text-muted">{v}</dd>
                 </div>
               ))}
@@ -241,14 +249,14 @@ function Hero() {
 
         <div className="relative lg:col-span-5">
           <Reveal delay={0.15}>
-            <div className="relative aspect-square border border-hairline">
-              <BrandLogo className="absolute inset-0 m-auto h-4/5 w-4/5 animate-[fade-up_1.2s_ease-out_0.2s_both] [animation-fill-mode:both]" />
-              <div className="absolute left-4 top-4 eyebrow">SYS_ID / DFTL-001</div>
+            <div className="relative flex aspect-square items-center justify-center overflow-hidden border border-hairline bg-black/40">
+              <BlackHole size={460} className="scale-90 sm:scale-100" />
+              <div className="absolute left-4 top-4 eyebrow">SYS_ID / DFTL-001 · GARGANTUA</div>
               <div className="absolute bottom-4 left-4 text-mono text-[10px] text-text-muted">MESH · STEALTH · SENSE</div>
-              <div className="absolute right-4 top-4 size-2 animate-pulse bg-foreground" />
+              <div className="absolute right-4 top-4 size-2 animate-pulse bg-ember" />
             </div>
             <div className="mt-3 flex justify-between text-[10px] uppercase tracking-[0.22em] text-text-muted">
-              <span>[ 00:01 ] system online</span>
+              <span>[ 00:01 ] telemetry nominal</span>
               <span>v 1.0</span>
             </div>
           </Reveal>
