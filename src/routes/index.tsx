@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { SiteShell, Section, Eyebrow } from "@/components/site/SiteShell";
 import { MeshDiagram } from "@/components/site/Visuals";
-import { BrandLogo } from "@/components/site/BrandLogo";
+import { BlackHole } from "@/components/site/Cosmic";
 import { Reveal } from "@/components/site/Reveal";
 import { TECHNOLOGIES, SERVICES } from "@/lib/site-data";
 import { supabase } from "@/integrations/supabase/client";
