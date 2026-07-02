@@ -3,7 +3,7 @@ import { Stars } from "@react-three/drei";
 import { Suspense, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
-const TEX_BASE = "https://unpkg.com/three@0.160.0/examples/textures/planets";
+const TEX_BASE = "https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/textures/planets";
 
 function Earth({ position = [2.4, -0.2, 0] as [number, number, number] }) {
   const [colorMap, normalMap, specMap, cloudMap] = useLoader(THREE.TextureLoader, [
