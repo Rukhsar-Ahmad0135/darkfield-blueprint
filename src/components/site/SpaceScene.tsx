@@ -282,19 +282,6 @@ function GargantuaCore() {
         />
       </mesh>
 
-      {/* Lensed "top arc" that wraps over the sphere — Interstellar signature */}
-      <mesh rotation={[Math.PI / 2 - 0.28, 0, 0]} position={[0, 0, 0.001]}>
-        <ringGeometry args={[1.02, 1.75, 256, 1, 0, Math.PI)]}>
-        </ringGeometry>
-        <meshBasicMaterial
-          color="#ffb266"
-          transparent
-          opacity={0.55}
-          side={THREE.DoubleSide}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-        />
-      </mesh>
 
       {/* Front lensed arc curving UP over the sphere (fakes gravitational lensing) */}
       <mesh position={[0, 0.02, 0.01]} rotation={[0, 0, 0]}>
