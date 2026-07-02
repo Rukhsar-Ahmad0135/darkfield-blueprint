@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { SiteShell, Section, Eyebrow } from "@/components/site/SiteShell";
 import { MeshDiagram } from "@/components/site/Visuals";
-import { BlackHole } from "@/components/site/Cosmic";
+import { SpaceScene, BlackHoleScene } from "@/components/site/SpaceScene";
 import { Reveal } from "@/components/site/Reveal";
 import { TECHNOLOGIES, SERVICES } from "@/lib/site-data";
 import { supabase } from "@/integrations/supabase/client";
@@ -40,6 +40,7 @@ function Home() {
     <SiteShell>
       <Hero />
       <About />
+      <GargantuaSection />
       <CollaborationsStrip />
       <TechGrid />
       <Architecture />
@@ -49,6 +50,31 @@ function Home() {
       <CareersCTA />
       <BigCTA />
     </SiteShell>
+  );
+}
+
+function GargantuaSection() {
+  return (
+    <section className="relative overflow-hidden border-b border-hairline bg-black">
+      <div className="absolute inset-0">
+        <BlackHoleScene className="h-full w-full" />
+      </div>
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black" />
+      <div className="relative mx-auto grid min-h-[92vh] max-w-[1400px] items-end px-6 pb-24 pt-24 lg:px-12">
+        <Reveal>
+          <div className="max-w-xl">
+            <Eyebrow>Gargantua · Signal Physics</Eyebrow>
+            <h2 className="mt-6 font-display text-4xl leading-[1.05] tracking-tight sm:text-6xl">
+              At the edge of what's <em className="italic text-ember ember-glow">measurable</em>.
+            </h2>
+            <p className="mt-6 text-base text-muted-foreground sm:text-lg">
+              We operate where classical systems collapse — the deep field of RF, mesh,
+              and stealth engineering. Cinematic in ambition, ruthless in execution.
+            </p>
+          </div>
+        </Reveal>
+      </div>
+    </section>
   );
 }
 
@@ -195,10 +221,16 @@ function OpportunitiesPreview() {
 
 function Hero() {
   return (
-    <section className="relative overflow-hidden border-b border-hairline cosmic-radial">
-      {/* Faint horizon gradient at bottom */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
-      <div className="relative mx-auto grid max-w-[1400px] gap-16 px-6 pb-32 pt-24 lg:grid-cols-12 lg:px-12 lg:pt-32">
+    <section className="relative overflow-hidden border-b border-hairline bg-black">
+      {/* Full-bleed Three.js space scene: rotating Earth + drifting spacecraft + stars */}
+      <div className="absolute inset-0">
+        <SpaceScene className="h-full w-full" />
+      </div>
+      {/* Vignettes so hero text stays crisp over Earth */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-background to-transparent" />
+
+      <div className="relative mx-auto grid min-h-[92vh] max-w-[1400px] content-center gap-16 px-6 pb-32 pt-24 lg:grid-cols-12 lg:px-12 lg:pt-32">
         <div className="lg:col-span-7">
           <Reveal>
             <Eyebrow>Dark Field / Tech Labs · est. 2026 · UK</Eyebrow>
@@ -228,7 +260,7 @@ function Hero() {
               </Link>
               <Link
                 to="/contact"
-                className="inline-flex items-center gap-2 border border-hairline px-6 py-3.5 text-[12px] uppercase tracking-[0.2em] hover:border-ember hover:text-ember"
+                className="inline-flex items-center gap-2 border border-hairline bg-black/40 px-6 py-3.5 text-[12px] uppercase tracking-[0.2em] backdrop-blur-sm hover:border-ember hover:text-ember"
               >
                 Talk to an Engineer
               </Link>
@@ -244,21 +276,6 @@ function Hero() {
                 </div>
               ))}
             </dl>
-          </Reveal>
-        </div>
-
-        <div className="relative lg:col-span-5">
-          <Reveal delay={0.15}>
-            <div className="relative flex aspect-square items-center justify-center overflow-hidden border border-hairline bg-black/40">
-              <BlackHole size={460} className="scale-90 sm:scale-100" />
-              <div className="absolute left-4 top-4 eyebrow">SYS_ID / DFTL-001 · GARGANTUA</div>
-              <div className="absolute bottom-4 left-4 text-mono text-[10px] text-text-muted">MESH · STEALTH · SENSE</div>
-              <div className="absolute right-4 top-4 size-2 animate-pulse bg-ember" />
-            </div>
-            <div className="mt-3 flex justify-between text-[10px] uppercase tracking-[0.22em] text-text-muted">
-              <span>[ 00:01 ] telemetry nominal</span>
-              <span>v 1.0</span>
-            </div>
           </Reveal>
         </div>
       </div>
