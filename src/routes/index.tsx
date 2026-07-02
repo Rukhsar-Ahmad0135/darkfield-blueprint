@@ -237,7 +237,7 @@ function Hero() {
           </Reveal>
           <Reveal delay={0.08}>
             <h1 className="mt-8 font-display text-[48px] leading-[1.02] tracking-[-0.02em] sm:text-[72px] lg:text-[96px]">
-              Beyond the <em className="italic text-ember ember-glow">event horizon</em>
+              Beyond the <em className="italic text-white">event horizon</em>
               <br />
               of engineering.
             </h1>
