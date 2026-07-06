@@ -2,13 +2,14 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { SiteShell, Section, Eyebrow } from "@/components/site/SiteShell";
 import { MeshDiagram } from "@/components/site/Visuals";
-import { EarthHeroScene } from "@/components/three/EarthHero";
 import { EnduranceViewer } from "@/components/three/EnduranceViewer";
 import { VoxeloBlackHoleScene as BlackHoleScene } from "@/components/three/VoxeloBlackHole";
 import { Reveal } from "@/components/site/Reveal";
 import { TECHNOLOGIES, SERVICES } from "@/lib/site-data";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowUpRight } from "lucide-react";
+import earthHero from "@/assets/earth_hero.avif.asset.json";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -223,52 +224,57 @@ function OpportunitiesPreview() {
 
 function Hero() {
   return (
-    <EarthHeroScene>
-      {() => (
-        <div className="relative mx-auto grid h-full max-w-[1400px] content-center gap-8 px-6 pb-12 pt-28 sm:pt-32 lg:grid-cols-12 lg:gap-16 lg:px-12 lg:pb-16 lg:pt-36">
-          {/* Vignette so text stays crisp */}
-          <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-black via-black/60 to-transparent" />
-          <div className="lg:col-span-7">
-            <Eyebrow>Dark Field / Tech Labs · est. 2026 · UK</Eyebrow>
-            <h1 className="mt-5 font-display text-[34px] leading-[1.05] tracking-[-0.02em] sm:mt-6 sm:text-[52px] lg:text-[72px]">
-              Beyond the <em className="italic text-white">event horizon</em>
-              <br />
-              of engineering.
-            </h1>
-            <p className="mt-5 max-w-xl text-sm text-muted-foreground sm:mt-6 sm:text-base">
-              Dark Field Tech Labs builds resilient wireless, stealth, surveillance and mesh
-              systems for environments where conventional infrastructure breaks down — defense,
-              critical infrastructure, autonomous fleets, and frontier research.
-            </p>
-            <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-8">
-              <Link
-                to="/technologies"
-                className="group inline-flex items-center gap-2 bg-ember px-6 py-3 text-[12px] uppercase tracking-[0.2em] text-primary-foreground hover:opacity-90"
-              >
-                Explore Our Technology
-                <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </Link>
-              <Link
-                to="/contact"
-                className="inline-flex items-center gap-2 border border-hairline bg-black/40 px-6 py-3 text-[12px] uppercase tracking-[0.2em] backdrop-blur-sm hover:border-ember hover:text-ember"
-              >
-                Talk to an Engineer
-              </Link>
-            </div>
-            <dl className="mt-8 grid max-w-lg grid-cols-3 gap-6 border-t border-hairline pt-5 sm:mt-10 sm:pt-6">
-              {[["04", "Core Pillars"], ["R&D", "Mandate"], ["Global", "Architecture"]].map(([k, v]) => (
-                <div key={v}>
-                  <dt className="text-mono text-[20px] font-medium text-ember">{k}</dt>
-                  <dd className="mt-1 text-[11px] uppercase tracking-[0.2em] text-text-muted">{v}</dd>
-                </div>
-              ))}
-            </dl>
+    <section className="relative overflow-hidden bg-black">
+      <img
+        src={earthHero.url}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+      />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black via-black/70 to-black/20" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
+      <div className="relative mx-auto grid min-h-[92vh] max-w-[1400px] content-center gap-8 px-6 pb-12 pt-28 sm:pt-32 lg:grid-cols-12 lg:gap-16 lg:px-12 lg:pb-16 lg:pt-36">
+        <div className="lg:col-span-7">
+          <Eyebrow>Dark Field / Tech Labs · est. 2026 · UK</Eyebrow>
+          <h1 className="mt-5 font-display text-[34px] leading-[1.05] tracking-[-0.02em] sm:mt-6 sm:text-[52px] lg:text-[72px]">
+            Beyond the <em className="italic text-white">event horizon</em>
+            <br />
+            of engineering.
+          </h1>
+          <p className="mt-5 max-w-xl text-sm text-muted-foreground sm:mt-6 sm:text-base">
+            Dark Field Tech Labs builds resilient wireless, stealth, surveillance and mesh
+            systems for environments where conventional infrastructure breaks down — defense,
+            critical infrastructure, autonomous fleets, and frontier research.
+          </p>
+          <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-8">
+            <Link
+              to="/technologies"
+              className="group inline-flex items-center gap-2 bg-ember px-6 py-3 text-[12px] uppercase tracking-[0.2em] text-primary-foreground hover:opacity-90"
+            >
+              Explore Our Technology
+              <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </Link>
+            <Link
+              to="/contact"
+              className="inline-flex items-center gap-2 border border-hairline bg-black/40 px-6 py-3 text-[12px] uppercase tracking-[0.2em] backdrop-blur-sm hover:border-ember hover:text-ember"
+            >
+              Talk to an Engineer
+            </Link>
           </div>
+          <dl className="mt-8 grid max-w-lg grid-cols-3 gap-6 border-t border-hairline pt-5 sm:mt-10 sm:pt-6">
+            {[["04", "Core Pillars"], ["R&D", "Mandate"], ["Global", "Architecture"]].map(([k, v]) => (
+              <div key={v}>
+                <dt className="text-mono text-[20px] font-medium text-ember">{k}</dt>
+                <dd className="mt-1 text-[11px] uppercase tracking-[0.2em] text-text-muted">{v}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
-      )}
-    </EarthHeroScene>
+      </div>
+    </section>
   );
 }
+
 
 function About() {
   return (
