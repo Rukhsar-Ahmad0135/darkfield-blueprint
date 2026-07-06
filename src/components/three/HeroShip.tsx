@@ -35,25 +35,28 @@ function Ship() {
 
   const group = useRef<THREE.Group>(null!);
   const ring = useRef<THREE.Group>(null!);
-  const DUR = 14; // seconds per pass
+  const DUR = 16;
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
-    const p = (t % DUR) / DUR; // 0 → 1 left to right
-    // Position: left (-4) to right (4)
-    const x = -4 + p * 8;
-    // Depth: far when left (z=-6), close when right (z=2) → bigger as it moves right
-    const z = -6 + p * 8;
-    // Scale grows with p
+    const p = (t % DUR) / DUR; // 0 → 1
+    // Right to left translation
+    const x = 4 - p * 8;
+    // Circular vertical motion (loop-de-loop) while translating
+    const angle = p * Math.PI * 2;
+    const y = Math.sin(angle) * 1.2;
+    const z = -6 + p * 8 + Math.cos(angle) * 0.8;
     const s = 0.8 + p * 2.4;
     if (group.current) {
-      group.current.position.set(x, Math.sin(t * 0.4) * 0.15, z);
+      group.current.position.set(x, y, z);
       group.current.scale.setScalar(s);
-      group.current.rotation.y = -0.25 + p * 0.4;
-      group.current.rotation.x = 0.05;
+      // Face along path (tangent), no self-spin
+      group.current.rotation.y = 0.25 - p * 0.4;
+      group.current.rotation.z = angle;
     }
-    if (ring.current) ring.current.rotation.z = t * 0.5;
+    if (ring.current) ring.current.rotation.z = t * 0.4;
   });
+
 
   return (
     <group ref={group}>
