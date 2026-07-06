@@ -225,22 +225,21 @@ function EnduranceFlyby({
   }, [scene]);
 
   useFrame((_, dt) => {
-    // Appear only when Earth is near peak (progress >= 0.75)
-    const p = progressRef.current;
-    const t = Math.max(0, Math.min(1, (p - 0.72) / 0.28));
-    const earthR = earthScaleRef.current; // Earth radius ~= scale
-    const shipSize = earthR * 0.5; // half of Earth
+    // Always visible; drift slowly left -> right on a long loop, regardless of Earth size
+    const earthR = Math.max(earthScaleRef.current, 0.35);
+    const shipSize = earthR * 0.5; // half of Earth (with a floor so it's visible early)
     if (group.current) {
-      // Traverse left -> right slowly across the view
-      const x = -earthR * 3.2 + t * (earthR * 6.4);
-      const y = earthR * 0.35;
-      const z = earthR * 1.2; // in front of Earth
+      const t = (performance.now() / 1000) * 0.03; // slow drift
+      const cycle = (t % 1); // 0 -> 1 loop
+      const x = -earthR * 3.2 + cycle * (earthR * 6.4);
+      const y = earthR * 0.35 + Math.sin(t * 4) * earthR * 0.05;
+      const z = earthR * 1.2;
       group.current.position.set(x, y, z);
       group.current.scale.setScalar(shipSize);
-      // Fade in via material opacity (approx via visibility)
-      group.current.visible = t > 0.02;
+      group.current.visible = true;
     }
     if (spin.current) spin.current.rotation.y += dt * 0.15;
+    void progressRef.current;
   });
 
   return (
