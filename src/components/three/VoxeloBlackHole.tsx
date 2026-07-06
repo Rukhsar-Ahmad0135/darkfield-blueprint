@@ -1,8 +1,11 @@
 import { useFrame } from "@react-three/fiber";
-import { Stars } from "@react-three/drei";
-import { useEffect, useMemo, useRef } from "react";
+import { Stars, useGLTF } from "@react-three/drei";
+import { Suspense, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { SceneCanvas } from "./InterstellarScenes";
+import enduranceAsset from "@/assets/endurance.glb.asset.json";
+
+useGLTF.preload(enduranceAsset.url);
 
 /** Global normalized scroll (0..1) shared across scene rigs. */
 const scrollRef = { current: 0 };
@@ -192,11 +195,12 @@ function BlackHoleRig({ scale = 1 }: { scale?: number }) {
   const diskUniforms = useMemo(
     () => ({
       uTime: { value: 0 },
-      uColorHot: { value: new THREE.Color(0xffffff) },
-      uColorMid1: { value: new THREE.Color(0xff7733) },
-      uColorMid2: { value: new THREE.Color(0xff4477) },
-      uColorMid3: { value: new THREE.Color(0x7744ff) },
-      uColorOuter: { value: new THREE.Color(0x4477ff) },
+      // Warm monochrome amber — Interstellar Gargantua palette, no rainbow
+      uColorHot: { value: new THREE.Color(0xfff2d8) },
+      uColorMid1: { value: new THREE.Color(0xffcc7a) },
+      uColorMid2: { value: new THREE.Color(0xffa347) },
+      uColorMid3: { value: new THREE.Color(0xd06a1a) },
+      uColorOuter: { value: new THREE.Color(0x6a2f08) },
       uNoiseScale: { value: 2.5 },
       uFlowSpeed: { value: 0.22 },
       uDensity: { value: 1.3 },
@@ -233,12 +237,14 @@ function BlackHoleRig({ scale = 1 }: { scale?: number }) {
       ehMat.current.uniforms.uTime.value = t;
       ehMat.current.uniforms.uCameraPosition.value.copy(state.camera.position);
     }
-    if (diskRef.current) diskRef.current.rotation.z += dt * (0.05 + s * 0.15);
+    // Disk rotates slowly and visibly at all times
+    if (diskRef.current) diskRef.current.rotation.z += dt * (0.12 + s * 0.15);
     if (groupRef.current) {
       // Whole scene stretches outward — the "space decompression"
       const scl = scale * (1 + s * 0.6);
       groupRef.current.scale.setScalar(scl);
-      groupRef.current.rotation.y = s * 0.4;
+      // Slow continuous yaw so rotation is obvious
+      groupRef.current.rotation.y = s * 0.4 + t * 0.05;
     }
   });
 
@@ -302,6 +308,83 @@ function StarField() {
   );
 }
 
+/* ── Endurance spaceship flyby ────────────────────────────────────────── */
+/**
+ * Spaceship enters from one edge and exits the opposite edge in a straight
+ * pass. It slows down while close to the black hole center (gravitational
+ * drag) and moves at cruise speed when far away. On each trip it picks a new
+ * random direction (top→bottom, left→right, diagonals) so the flyby feels
+ * fresh, not looping.
+ */
+function EnduranceFlyby() {
+  const { scene } = useGLTF(enduranceAsset.url) as any;
+  const ref = useRef<THREE.Group>(null!);
+  const state = useRef({
+    start: new THREE.Vector3(),
+    end: new THREE.Vector3(),
+    pos: new THREE.Vector3(),
+    dir: new THREE.Vector3(),
+    yaw: 0,
+  });
+
+  const cloned = useMemo(() => {
+    const c = scene.clone(true);
+    const box = new THREE.Box3().setFromObject(c);
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    const center = new THREE.Vector3();
+    box.getCenter(center);
+    const maxDim = Math.max(size.x, size.y, size.z) || 1;
+    const s = 1.2 / maxDim;
+    c.position.sub(center);
+    c.scale.setScalar(s);
+    return c;
+  }, [scene]);
+
+  // pick a fresh random straight-line path across the scene
+  function newRoute() {
+    // 8 compass points around the black hole, pick two opposite-ish
+    const R = 16;
+    const angle = Math.random() * Math.PI * 2;
+    const perp = angle + Math.PI + (Math.random() - 0.5) * 0.6;
+    state.current.start.set(Math.cos(angle) * R, (Math.random() - 0.5) * 4, Math.sin(angle) * R * 0.4);
+    state.current.end.set(Math.cos(perp) * R, (Math.random() - 0.5) * 4, Math.sin(perp) * R * 0.4);
+    state.current.pos.copy(state.current.start);
+    state.current.dir.copy(state.current.end).sub(state.current.start).normalize();
+    state.current.yaw = Math.atan2(state.current.dir.x, state.current.dir.z);
+  }
+
+  useEffect(() => {
+    newRoute();
+  }, []);
+
+  useFrame((_, dt) => {
+    const st = state.current;
+    // distance from black-hole center (0,0,0) in XY plane
+    const dist = Math.hypot(st.pos.x, st.pos.y);
+    // Speed: slow (0.4) near center, cruise (2.4) far away
+    const speed = THREE.MathUtils.lerp(0.4, 2.4, THREE.MathUtils.clamp(dist / 8, 0, 1));
+    st.pos.addScaledVector(st.dir, speed * dt);
+
+    // reached destination — pick a new path from a different side
+    if (st.pos.distanceTo(st.start) > st.end.distanceTo(st.start)) {
+      newRoute();
+    }
+
+    if (ref.current) {
+      ref.current.position.copy(st.pos);
+      ref.current.rotation.y = st.yaw;
+      ref.current.rotation.z += dt * 0.4;
+    }
+  });
+
+  return (
+    <group ref={ref}>
+      <primitive object={cloned} />
+    </group>
+  );
+}
+
 export function VoxeloBlackHoleScene({
   className = "",
   scale = 1,
@@ -313,9 +396,14 @@ export function VoxeloBlackHoleScene({
 }) {
   return (
     <SceneCanvas className={className} cameraZ={cameraZ} fov={60} bloomIntensity={0.9}>
-      <ambientLight intensity={0.05} />
+      <ambientLight intensity={0.15} />
+      <directionalLight position={[6, 4, 6]} intensity={1.1} color="#ffd9a8" />
+      <directionalLight position={[-6, -3, -4]} intensity={0.3} color="#88aaff" />
       <StarField />
       <BlackHoleRig scale={scale} />
+      <Suspense fallback={null}>
+        <EnduranceFlyby />
+      </Suspense>
     </SceneCanvas>
   );
 }
