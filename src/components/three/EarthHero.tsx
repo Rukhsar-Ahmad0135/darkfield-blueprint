@@ -2,11 +2,11 @@ import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { Stars, useGLTF, Clone } from "@react-three/drei";
 import { Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import * as THREE from "three";
-import satelliteAsset from "@/assets/satellite.glb.asset.json";
-import enduranceAsset from "@/assets/endurance.glb.asset.json";
+import issAsset from "@/assets/iss.glb.asset.json";
+import spaceStation3Asset from "@/assets/spacestation3.glb.asset.json";
 
-useGLTF.preload(satelliteAsset.url);
-useGLTF.preload(enduranceAsset.url);
+useGLTF.preload(issAsset.url);
+useGLTF.preload(spaceStation3Asset.url);
 
 const TEX_BASE = "https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/textures/planets";
 
@@ -35,18 +35,16 @@ function useHeroScroll(ref: React.RefObject<HTMLElement | null>) {
   return p;
 }
 
-/* ── Satellites orbiting Earth ─────────────────────────────────────────── */
-/* Animated satellites — proper satellite mesh with body + solar panels */
-function SatelliteMesh() {
-  const { scene } = useGLTF(satelliteAsset.url) as unknown as { scene: THREE.Group };
+/* ── ISS orbiting Earth ─────────────────────────────────────────────── */
+function IssMesh() {
+  const { scene } = useGLTF(issAsset.url) as unknown as { scene: THREE.Group };
   const prepared = useMemo(() => {
     const cloned = scene.clone(true);
-    // Normalize size to ~unit and apply a clean metallic look
     const box = new THREE.Box3().setFromObject(cloned);
     const size = new THREE.Vector3();
     box.getSize(size);
     const maxDim = Math.max(size.x, size.y, size.z) || 1;
-    const norm = 0.2 / maxDim;
+    const norm = 0.35 / maxDim;
     cloned.scale.setScalar(norm);
     const center = new THREE.Vector3();
     box.getCenter(center);
@@ -54,14 +52,12 @@ function SatelliteMesh() {
     cloned.traverse((o) => {
       const m = o as THREE.Mesh;
       if (m.isMesh) {
-        m.castShadow = false;
-        m.receiveShadow = false;
         m.material = new THREE.MeshStandardMaterial({
-          color: "#c9ced6",
-          metalness: 0.85,
-          roughness: 0.35,
+          color: "#d8dde3",
+          metalness: 0.75,
+          roughness: 0.4,
           emissive: new THREE.Color("#1a2540"),
-          emissiveIntensity: 0.15,
+          emissiveIntensity: 0.18,
         });
       }
     });
@@ -70,50 +66,28 @@ function SatelliteMesh() {
   return <Clone object={prepared} />;
 }
 
-function OrbitingSatellites({ count = 25 }: { count?: number }) {
-  const refs = useRef<THREE.Group[]>([]);
-  const orbits = useMemo(() => {
-    const arr: { radius: number; speed: number; tilt: [number, number, number]; phase: number; scale: number }[] = [];
-    for (let i = 0; i < count; i++) {
-      arr.push({
-        radius: 1.22 + Math.random() * 0.5,
-        speed: 0.05 + Math.random() * 0.09,
-        tilt: [
-          (Math.random() - 0.5) * Math.PI,
-          (Math.random() - 0.5) * Math.PI,
-          (Math.random() - 0.5) * Math.PI,
-        ],
-        phase: Math.random() * Math.PI * 2,
-        scale: 0.7 + Math.random() * 0.6,
-      });
-    }
-    return arr;
-  }, [count]);
-
+/** ISS orbits at a fixed distance relative to Earth radius, so orbit stays
+ *  proportional whether Earth is tiny or fully grown. */
+function OrbitingISS() {
+  const pivot = useRef<THREE.Group>(null!);
+  const ship = useRef<THREE.Group>(null!);
   useFrame((state) => {
     const t = state.clock.elapsedTime;
-    refs.current.forEach((g, i) => {
-      if (!g) return;
-      const o = orbits[i];
-      const a = t * o.speed + o.phase;
-      g.position.set(Math.cos(a) * o.radius, 0, Math.sin(a) * o.radius);
-      g.rotation.y = -a + Math.PI / 2;
-    });
+    if (pivot.current) pivot.current.rotation.y = t * 0.09;
+    if (ship.current) ship.current.rotation.y = t * 0.4;
   });
-
   return (
-    <group>
-      {orbits.map((o, i) => (
-        <group key={i} rotation={o.tilt}>
-          <group ref={(el) => { if (el) refs.current[i] = el; }} scale={o.scale}>
-            <SatelliteMesh />
-          </group>
+    // Rotate the whole orbit on a slight incline, like a real orbital plane.
+    <group rotation={[0.35, 0, 0.12]}>
+      <group ref={pivot}>
+        {/* Distance from Earth center in Earth-radius units. Earth radius = 1 in local units. */}
+        <group ref={ship} position={[1.25, 0, 0]}>
+          <IssMesh />
         </group>
-      ))}
+      </group>
     </group>
   );
 }
-
 
 /* ── Earth + Clouds + Atmosphere ──────────────────────────────────────── */
 function Earth({ scaleTarget }: { scaleTarget: React.MutableRefObject<number> }) {
@@ -172,6 +146,10 @@ function Earth({ scaleTarget }: { scaleTarget: React.MutableRefObject<number> })
               gl_FragColor = vec4(0.55, 0.75, 1.0, f * 0.28); }`}
         />
       </mesh>
+
+      {/* ISS is a child of Earth's group so it orbits at a proportional
+          distance whether Earth is tiny or fully grown. */}
+      <OrbitingISS />
     </group>
   );
 }
@@ -184,25 +162,16 @@ function SlowSpin({ children }: { children: ReactNode }) {
   return <group ref={ref}>{children}</group>;
 }
 
-/* ── Endurance flyby (Interstellar) ───────────────────────────────────── */
-function EnduranceFlyby({
-  progressRef,
-  earthScaleRef,
-}: {
-  progressRef: React.MutableRefObject<number>;
-  earthScaleRef: React.MutableRefObject<number>;
-}) {
-  const { scene } = useGLTF(enduranceAsset.url) as unknown as { scene: THREE.Group };
-  const group = useRef<THREE.Group>(null!);
-  const spin = useRef<THREE.Group>(null!);
-
+/* ── Floating Space Station 3 (deep space, foreground drift) ──────────── */
+function FloatingSpaceStation3() {
+  const { scene } = useGLTF(spaceStation3Asset.url) as unknown as { scene: THREE.Group };
   const prepared = useMemo(() => {
     const cloned = scene.clone(true);
     const box = new THREE.Box3().setFromObject(cloned);
     const size = new THREE.Vector3();
     box.getSize(size);
     const maxDim = Math.max(size.x, size.y, size.z) || 1;
-    const norm = 1 / maxDim; // normalize to unit; final scale applied by parent
+    const norm = 1 / maxDim;
     cloned.scale.setScalar(norm);
     const center = new THREE.Vector3();
     box.getCenter(center);
@@ -211,40 +180,31 @@ function EnduranceFlyby({
       const m = o as THREE.Mesh;
       if (m.isMesh) {
         m.material = new THREE.MeshStandardMaterial({
-          color: "#d6dae0",
-          metalness: 0.8,
+          color: "#c8ccd2",
+          metalness: 0.7,
           roughness: 0.45,
-          emissive: new THREE.Color("#0e1524"),
-          emissiveIntensity: 0.2,
+          emissive: new THREE.Color("#0f1a2e"),
+          emissiveIntensity: 0.22,
         });
       }
     });
     return cloned;
   }, [scene]);
 
-  useFrame((_, dt) => {
-    // Always visible; drift slowly left -> right on a long loop, regardless of Earth size
-    const earthR = Math.max(earthScaleRef.current, 0.35);
-    const shipSize = earthR * 1.1; // bigger — slightly larger than Earth for prominence
+  const group = useRef<THREE.Group>(null!);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
     if (group.current) {
-      const t = (performance.now() / 1000) * 0.03; // slow drift
-      const cycle = (t % 1); // 0 -> 1 loop
-      const x = -earthR * 3.2 + cycle * (earthR * 6.4);
-      const y = earthR * 0.35 + Math.sin(t * 4) * earthR * 0.05;
-      const z = earthR * 1.2;
-      group.current.position.set(x, y, z);
-      group.current.scale.setScalar(shipSize);
-      group.current.visible = true;
+      // Gentle floating drift, upper-left of the scene, always visible.
+      group.current.position.set(-3.2 + Math.sin(t * 0.15) * 0.2, 1.6 + Math.sin(t * 0.2) * 0.15, -1.5);
+      group.current.rotation.y = t * 0.08;
+      group.current.rotation.x = Math.sin(t * 0.1) * 0.1;
     }
-    if (spin.current) spin.current.rotation.y += dt * 0.15;
-    void progressRef.current;
   });
 
   return (
-    <group ref={group} visible={false}>
-      <group ref={spin} rotation={[0.15, 0, 0.05]}>
-        <Clone object={prepared} />
-      </group>
+    <group ref={group} scale={1.2}>
+      <Clone object={prepared} />
     </group>
   );
 }
@@ -300,7 +260,7 @@ export function EarthHeroScene({
                 <Stars radius={140} depth={70} count={9000} factor={3.2} saturation={0} fade speed={0.12} />
               </SlowSpin>
               <Earth scaleTarget={scaleTarget} />
-              
+              <FloatingSpaceStation3 />
             </Suspense>
           </Canvas>
         )}
