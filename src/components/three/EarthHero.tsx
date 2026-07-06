@@ -271,7 +271,7 @@ export function EarthHeroScene({
 
   // Earth scale: tiny → full over the first 80% of scroll
   const earthProgress = Math.min(1, progress / 0.8);
-  scaleTarget.current = 0.12 + earthProgress * 1.35;
+  scaleTarget.current = 0.12 + earthProgress * 2.15;
   earthScaleRef.current = scaleTarget.current;
 
   // Text reveal after Earth reaches peak
