@@ -3,8 +3,10 @@ import { Stars, useGLTF, Clone } from "@react-three/drei";
 import { Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import * as THREE from "three";
 import satelliteAsset from "@/assets/satellite.glb.asset.json";
+import enduranceAsset from "@/assets/endurance.glb.asset.json";
 
 useGLTF.preload(satelliteAsset.url);
+useGLTF.preload(enduranceAsset.url);
 
 const TEX_BASE = "https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/textures/planets";
 
