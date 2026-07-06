@@ -31,54 +31,7 @@ function useHeroScroll(ref: React.RefObject<HTMLElement | null>) {
 }
 
 /* ── Satellites orbiting Earth ─────────────────────────────────────────── */
-function Satellites({ count = 25 }: { count?: number }) {
-  const group = useRef<THREE.Group>(null!);
-  const orbits = useMemo(() => {
-    const arr: { radius: number; speed: number; tilt: THREE.Euler; phase: number; size: number }[] = [];
-    for (let i = 0; i < count; i++) {
-      arr.push({
-        radius: 1.25 + Math.random() * 0.55,
-        speed: 0.15 + Math.random() * 0.35,
-        tilt: new THREE.Euler(
-          (Math.random() - 0.5) * Math.PI,
-          (Math.random() - 0.5) * Math.PI,
-          (Math.random() - 0.5) * Math.PI,
-        ),
-        phase: Math.random() * Math.PI * 2,
-        size: 0.008 + Math.random() * 0.008,
-      });
-    }
-    return arr;
-  }, [count]);
-
-  useFrame((state) => {
-    const t = state.clock.elapsedTime;
-    if (!group.current) return;
-    group.current.children.forEach((child, i) => {
-      const o = orbits[i];
-      const a = t * o.speed + o.phase;
-      child.position.set(Math.cos(a) * o.radius, 0, Math.sin(a) * o.radius);
-    });
-  });
-
-  return (
-    <group>
-      {orbits.map((o, i) => (
-        <group key={i} rotation={o.tilt}>
-          <group ref={i === 0 ? group : undefined}>
-            {/* the ref above only attaches once — use a shared parent instead */}
-          </group>
-          <mesh position={[o.radius, 0, 0]}>
-            <sphereGeometry args={[o.size, 8, 8]} />
-            <meshBasicMaterial color="#e8f0ff" />
-          </mesh>
-        </group>
-      ))}
-    </group>
-  );
-}
-
-/* Proper animated satellites — one group per orbit with its own tilt */
+/* Animated satellites — one group per orbit with its own tilt */
 function OrbitingSatellites({ count = 25 }: { count?: number }) {
   const refs = useRef<THREE.Mesh[]>([]);
   const orbits = useMemo(() => {
