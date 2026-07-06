@@ -3,10 +3,30 @@ import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 import { Starfield } from "./Cosmic";
 
-export function SiteShell({ children }: { children: ReactNode }) {
+type SiteShellProps = {
+  children: ReactNode;
+  /** Optional fixed cinematic backdrop (behind starfield). */
+  backdrop?: ReactNode;
+};
+
+export function SiteShell({ children, backdrop }: SiteShellProps) {
   return (
     <div className="relative min-h-screen bg-background text-foreground">
+      {/* Layer 1: cinematic 3D backdrop (per page) */}
+      {backdrop && (
+        <div className="pointer-events-none fixed inset-0 -z-20 opacity-60">{backdrop}</div>
+      )}
+      {/* Layer 2: global starfield */}
       <Starfield />
+      {/* Layer 3: cinematic vignette + film-grain overlay */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 z-[1]"
+        style={{
+          background:
+            "radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.55) 100%)",
+        }}
+      />
       <Navbar />
       <main className="relative pt-20">{children}</main>
       <Footer />

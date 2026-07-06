@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell, Section, Eyebrow } from "@/components/site/SiteShell";
+import { WormholeScene } from "@/components/three/InterstellarScenes";
 import { TECHNOLOGIES } from "@/lib/site-data";
 import { ArrowUpRight } from "lucide-react";
 
@@ -20,7 +21,7 @@ export const Route = createFileRoute("/technologies/")({
 
 function TechnologiesPage() {
   return (
-    <SiteShell>
+    <SiteShell backdrop={<WormholeScene className="h-full w-full" />}>
       <Section className="border-b border-hairline">
         <Eyebrow>Technologies</Eyebrow>
         <h1 className="mt-6 max-w-4xl text-5xl font-semibold tracking-tight sm:text-7xl">

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { SiteShell, Section, Eyebrow } from "@/components/site/SiteShell";
+import { WaterPlanetScene } from "@/components/three/InterstellarScenes";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -21,7 +22,7 @@ function ContactPage() {
   const [sent, setSent] = useState(false);
 
   return (
-    <SiteShell>
+    <SiteShell backdrop={<WaterPlanetScene className="h-full w-full" />}>
       <Section className="border-b border-hairline">
         <Eyebrow>Contact</Eyebrow>
         <h1 className="mt-6 max-w-4xl text-5xl font-semibold tracking-tight sm:text-7xl">

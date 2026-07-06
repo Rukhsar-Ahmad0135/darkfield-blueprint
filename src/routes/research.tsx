@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, Section, Eyebrow } from "@/components/site/SiteShell";
+import { TesseractScene } from "@/components/three/InterstellarScenes";
 import { RESEARCH_PROJECTS } from "@/lib/site-data";
 
 export const Route = createFileRoute("/research")({
@@ -19,7 +20,7 @@ export const Route = createFileRoute("/research")({
 
 function ResearchPage() {
   return (
-    <SiteShell>
+    <SiteShell backdrop={<TesseractScene className="h-full w-full" />}>
       <Section className="border-b border-hairline">
         <Eyebrow>Research & Innovation</Eyebrow>
         <h1 className="mt-6 max-w-4xl text-5xl font-semibold tracking-tight sm:text-7xl">

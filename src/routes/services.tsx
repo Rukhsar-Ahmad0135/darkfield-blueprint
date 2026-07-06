@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, Section, Eyebrow } from "@/components/site/SiteShell";
+import { DistantGargantuaScene } from "@/components/three/InterstellarScenes";
 import { SERVICES } from "@/lib/site-data";
 
 export const Route = createFileRoute("/services")({
@@ -19,7 +20,7 @@ export const Route = createFileRoute("/services")({
 
 function ServicesPage() {
   return (
-    <SiteShell>
+    <SiteShell backdrop={<DistantGargantuaScene className="h-full w-full" />}>
       <Section className="border-b border-hairline">
         <Eyebrow>Services</Eyebrow>
         <h1 className="mt-6 max-w-4xl text-5xl font-semibold tracking-tight sm:text-7xl">
