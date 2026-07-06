@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { SiteShell, Section, Eyebrow } from "@/components/site/SiteShell";
 import { MeshDiagram } from "@/components/site/Visuals";
 import { EarthHeroScene } from "@/components/three/EarthHero";
+import { EnduranceViewer } from "@/components/three/EnduranceViewer";
 import { VoxeloBlackHoleScene as BlackHoleScene } from "@/components/three/VoxeloBlackHole";
 import { Reveal } from "@/components/site/Reveal";
 import { TECHNOLOGIES, SERVICES } from "@/lib/site-data";
@@ -349,8 +350,11 @@ function TechGrid() {
 
 function Architecture() {
   return (
-    <Section className="border-b border-hairline">
-      <div className="grid gap-12 lg:grid-cols-12">
+    <Section className="relative border-b border-hairline overflow-hidden">
+      <div className="pointer-events-auto absolute inset-0 -z-0 opacity-70">
+        <EnduranceViewer />
+      </div>
+      <div className="relative z-10 grid gap-12 lg:grid-cols-12">
         <div className="lg:col-span-4">
           <Eyebrow>Flagship · Dark Field Mesh</Eyebrow>
           <h2 className="mt-6 text-3xl font-semibold tracking-tight sm:text-4xl">
