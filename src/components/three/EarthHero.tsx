@@ -232,8 +232,9 @@ export function EarthHeroScene({
             gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
             className="absolute inset-0"
           >
-            <ambientLight intensity={0.08} />
-            <directionalLight position={[6, 2, 4]} intensity={2.4} color="#fff2dc" />
+            <ambientLight intensity={0.35} />
+            <directionalLight position={[6, 2, 4]} intensity={2.8} color="#ffffff" />
+            <hemisphereLight args={["#b6d0ff", "#1a1a2a", 0.35]} />
             <Suspense fallback={null}>
               <SlowSpin>
                 <Stars radius={140} depth={70} count={9000} factor={3.2} saturation={0} fade speed={0.12} />
