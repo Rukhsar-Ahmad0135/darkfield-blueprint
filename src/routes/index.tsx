@@ -1,15 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { lazy, Suspense } from "react";
 import { SiteShell, Section, Eyebrow } from "@/components/site/SiteShell";
 import { MeshDiagram } from "@/components/site/Visuals";
-import { HeroShipScene } from "@/components/three/HeroShip";
-import { EnduranceViewer } from "@/components/three/EnduranceViewer";
 import { VoxeloBlackHoleScene as BlackHoleScene } from "@/components/three/VoxeloBlackHole";
 import { Reveal } from "@/components/site/Reveal";
 import { TECHNOLOGIES, SERVICES } from "@/lib/site-data";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowUpRight } from "lucide-react";
 import earthHero from "@/assets/earth_hero.avif.asset.json";
+
+const HeroShipScene = lazy(() =>
+  import("@/components/three/HeroShip").then((m) => ({ default: m.HeroShipScene })),
+);
+const EnduranceViewer = lazy(() =>
+  import("@/components/three/EnduranceViewer").then((m) => ({ default: m.EnduranceViewer })),
+);
 
 
 export const Route = createFileRoute("/")({
@@ -235,7 +241,9 @@ function Hero() {
       />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
-      <HeroShipScene className="!absolute inset-0 !h-full !w-full" />
+      <Suspense fallback={null}>
+        <HeroShipScene className="!absolute inset-0 !h-full !w-full" />
+      </Suspense>
 
       <div className="relative mx-auto grid min-h-[92vh] max-w-[1400px] content-center gap-8 px-6 pb-12 pt-28 sm:pt-32 lg:grid-cols-12 lg:gap-16 lg:px-12 lg:pb-16 lg:pt-36">
         <div className="lg:col-span-7">
@@ -362,7 +370,9 @@ function Architecture() {
   return (
     <Section className="relative border-b border-hairline overflow-hidden">
       <div className="pointer-events-auto absolute inset-0 -z-0 opacity-70">
-        <EnduranceViewer />
+        <Suspense fallback={null}>
+          <EnduranceViewer />
+        </Suspense>
       </div>
       <div className="relative z-10 grid gap-12 lg:grid-cols-12">
         <div className="lg:col-span-4">
