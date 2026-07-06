@@ -133,7 +133,7 @@ function Earth({ scaleTarget }: { scaleTarget: React.MutableRefObject<number> })
   useFrame((_, dt) => {
     if (earth.current) earth.current.rotation.y += dt * 0.045;
     if (clouds.current) clouds.current.rotation.y += dt * 0.06;
-    smooth.current += (scaleTarget.current - smooth.current) * Math.min(1, dt * 3);
+    smooth.current += (scaleTarget.current - smooth.current) * Math.min(1, dt * 1.2);
     if (group.current) group.current.scale.setScalar(smooth.current);
   });
 
