@@ -186,6 +186,72 @@ function SlowSpin({ children }: { children: ReactNode }) {
   return <group ref={ref}>{children}</group>;
 }
 
+/* ── Endurance flyby (Interstellar) ───────────────────────────────────── */
+function EnduranceFlyby({
+  progressRef,
+  earthScaleRef,
+}: {
+  progressRef: React.MutableRefObject<number>;
+  earthScaleRef: React.MutableRefObject<number>;
+}) {
+  const { scene } = useGLTF(enduranceAsset.url) as unknown as { scene: THREE.Group };
+  const group = useRef<THREE.Group>(null!);
+  const spin = useRef<THREE.Group>(null!);
+
+  const prepared = useMemo(() => {
+    const cloned = scene.clone(true);
+    const box = new THREE.Box3().setFromObject(cloned);
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    const maxDim = Math.max(size.x, size.y, size.z) || 1;
+    const norm = 1 / maxDim; // normalize to unit; final scale applied by parent
+    cloned.scale.setScalar(norm);
+    const center = new THREE.Vector3();
+    box.getCenter(center);
+    cloned.position.sub(center.multiplyScalar(norm));
+    cloned.traverse((o) => {
+      const m = o as THREE.Mesh;
+      if (m.isMesh) {
+        m.material = new THREE.MeshStandardMaterial({
+          color: "#d6dae0",
+          metalness: 0.8,
+          roughness: 0.45,
+          emissive: new THREE.Color("#0e1524"),
+          emissiveIntensity: 0.2,
+        });
+      }
+    });
+    return cloned;
+  }, [scene]);
+
+  useFrame((_, dt) => {
+    // Appear only when Earth is near peak (progress >= 0.75)
+    const p = progressRef.current;
+    const t = Math.max(0, Math.min(1, (p - 0.72) / 0.28));
+    const earthR = earthScaleRef.current; // Earth radius ~= scale
+    const shipSize = earthR * 0.5; // half of Earth
+    if (group.current) {
+      // Traverse left -> right slowly across the view
+      const x = -earthR * 3.2 + t * (earthR * 6.4);
+      const y = earthR * 0.35;
+      const z = earthR * 1.2; // in front of Earth
+      group.current.position.set(x, y, z);
+      group.current.scale.setScalar(shipSize);
+      // Fade in via material opacity (approx via visibility)
+      group.current.visible = t > 0.02;
+    }
+    if (spin.current) spin.current.rotation.y += dt * 0.15;
+  });
+
+  return (
+    <group ref={group} visible={false}>
+      <group ref={spin} rotation={[0.15, 0, 0.05]}>
+        <Clone object={prepared} />
+      </group>
+    </group>
+  );
+}
+
 /**
  * Full-bleed hero: tiny Earth in space that grows as the user scrolls.
  * Children (hero text) receive `progress` (0..1) to fade in near peak size.
