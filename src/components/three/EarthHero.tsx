@@ -171,7 +171,7 @@ function Earth({ scaleTarget }: { scaleTarget: React.MutableRefObject<number> })
         />
       </mesh>
       {/* Satellites scale with Earth */}
-      <OrbitingSatellites count={25} />
+      <OrbitingSatellites count={14} />
     </group>
   );
 }
