@@ -302,6 +302,7 @@ export function EarthHeroScene({
                 <Stars radius={140} depth={70} count={9000} factor={3.2} saturation={0} fade speed={0.12} />
               </SlowSpin>
               <Earth scaleTarget={scaleTarget} />
+              <EnduranceFlyby progressRef={progressRef} earthScaleRef={earthScaleRef} />
             </Suspense>
           </Canvas>
         )}
