@@ -46,7 +46,7 @@ function SatelliteMesh() {
     const size = new THREE.Vector3();
     box.getSize(size);
     const maxDim = Math.max(size.x, size.y, size.z) || 1;
-    const norm = 0.12 / maxDim;
+    const norm = 0.2 / maxDim;
     cloned.scale.setScalar(norm);
     const center = new THREE.Vector3();
     box.getCenter(center);
