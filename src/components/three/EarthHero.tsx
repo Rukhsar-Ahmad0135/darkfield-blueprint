@@ -6,7 +6,7 @@ import * as THREE from "three";
 const TEX_BASE = "https://cdn.jsdelivr.net/gh/mrdoob/three.js@r160/examples/textures/planets";
 
 /** Scroll progress within the hero container (0 = top, 1 = fully scrolled). */
-function useHeroScroll(ref: React.RefObject<HTMLElement>) {
+function useHeroScroll(ref: React.RefObject<HTMLElement | null>) {
   const [p, setP] = useState(0);
   useEffect(() => {
     if (typeof window === "undefined") return;
