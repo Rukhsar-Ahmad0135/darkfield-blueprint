@@ -172,8 +172,6 @@ function Earth({ scaleTarget }: { scaleTarget: React.MutableRefObject<number> })
               gl_FragColor = vec4(0.55, 0.75, 1.0, f * 0.28); }`}
         />
       </mesh>
-      {/* Satellites scale with Earth */}
-      <OrbitingSatellites count={14} />
     </group>
   );
 }
@@ -227,7 +225,7 @@ function EnduranceFlyby({
   useFrame((_, dt) => {
     // Always visible; drift slowly left -> right on a long loop, regardless of Earth size
     const earthR = Math.max(earthScaleRef.current, 0.35);
-    const shipSize = earthR * 0.5; // half of Earth (with a floor so it's visible early)
+    const shipSize = earthR * 1.1; // bigger — slightly larger than Earth for prominence
     if (group.current) {
       const t = (performance.now() / 1000) * 0.03; // slow drift
       const cycle = (t % 1); // 0 -> 1 loop
