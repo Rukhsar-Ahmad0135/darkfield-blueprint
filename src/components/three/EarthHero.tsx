@@ -36,29 +36,36 @@ function useHeroScroll(ref: React.RefObject<HTMLElement | null>) {
 /* ── Satellites orbiting Earth ─────────────────────────────────────────── */
 /* Animated satellites — proper satellite mesh with body + solar panels */
 function SatelliteMesh() {
-  return (
-    <group>
-      {/* Body */}
-      <mesh>
-        <boxGeometry args={[0.04, 0.03, 0.03]} />
-        <meshStandardMaterial color="#d8dbe0" metalness={0.7} roughness={0.35} />
-      </mesh>
-      {/* Solar panels */}
-      <mesh position={[-0.075, 0, 0]}>
-        <boxGeometry args={[0.11, 0.002, 0.05]} />
-        <meshStandardMaterial color="#1a2f6b" emissive="#2a4a9c" emissiveIntensity={0.35} metalness={0.5} roughness={0.4} />
-      </mesh>
-      <mesh position={[0.075, 0, 0]}>
-        <boxGeometry args={[0.11, 0.002, 0.05]} />
-        <meshStandardMaterial color="#1a2f6b" emissive="#2a4a9c" emissiveIntensity={0.35} metalness={0.5} roughness={0.4} />
-      </mesh>
-      {/* Antenna dish */}
-      <mesh position={[0, 0.022, 0]} rotation={[Math.PI, 0, 0]}>
-        <coneGeometry args={[0.014, 0.018, 12, 1, true]} />
-        <meshStandardMaterial color="#f2f4f8" metalness={0.6} roughness={0.3} side={THREE.DoubleSide} />
-      </mesh>
-    </group>
-  );
+  const { scene } = useGLTF(satelliteAsset.url) as unknown as { scene: THREE.Group };
+  const prepared = useMemo(() => {
+    const cloned = scene.clone(true);
+    // Normalize size to ~unit and apply a clean metallic look
+    const box = new THREE.Box3().setFromObject(cloned);
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    const maxDim = Math.max(size.x, size.y, size.z) || 1;
+    const norm = 0.12 / maxDim;
+    cloned.scale.setScalar(norm);
+    const center = new THREE.Vector3();
+    box.getCenter(center);
+    cloned.position.sub(center.multiplyScalar(norm));
+    cloned.traverse((o) => {
+      const m = o as THREE.Mesh;
+      if (m.isMesh) {
+        m.castShadow = false;
+        m.receiveShadow = false;
+        m.material = new THREE.MeshStandardMaterial({
+          color: "#c9ced6",
+          metalness: 0.85,
+          roughness: 0.35,
+          emissive: new THREE.Color("#1a2540"),
+          emissiveIntensity: 0.15,
+        });
+      }
+    });
+    return cloned;
+  }, [scene]);
+  return <Clone object={prepared} />;
 }
 
 function OrbitingSatellites({ count = 25 }: { count?: number }) {
