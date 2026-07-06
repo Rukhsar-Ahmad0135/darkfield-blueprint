@@ -1,8 +1,30 @@
 import { useFrame } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { SceneCanvas } from "./InterstellarScenes";
+
+/** Global normalized scroll (0..1) shared across scene rigs. */
+const scrollRef = { current: 0 };
+let scrollBound = false;
+function useScrollProgress() {
+  useEffect(() => {
+    if (scrollBound || typeof window === "undefined") return;
+    scrollBound = true;
+    const update = () => {
+      const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      scrollRef.current = Math.min(1, Math.max(0, window.scrollY / max));
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+  return scrollRef;
+}
 
 /**
  * Photoreal black hole ported from VoXelo's CodePen (wBKvJxd):
@@ -160,9 +182,12 @@ const EH_FRAG = /* glsl */ `
 `;
 
 function BlackHoleRig({ scale = 1 }: { scale?: number }) {
+  const groupRef = useRef<THREE.Group>(null!);
   const diskRef = useRef<THREE.Mesh>(null!);
   const diskMat = useRef<THREE.ShaderMaterial>(null!);
   const ehMat = useRef<THREE.ShaderMaterial>(null!);
+  const smoothScroll = useRef(0);
+  useScrollProgress();
 
   const diskUniforms = useMemo(
     () => ({
@@ -191,16 +216,34 @@ function BlackHoleRig({ scale = 1 }: { scale?: number }) {
 
   useFrame((state, dt) => {
     const t = state.clock.elapsedTime;
-    if (diskMat.current) diskMat.current.uniforms.uTime.value = t;
+    // ease scroll toward target for smooth compress/decompress
+    const target = scrollRef.current;
+    smoothScroll.current += (target - smoothScroll.current) * Math.min(1, dt * 4);
+    const s = smoothScroll.current; // 0..1
+
+    if (diskMat.current) {
+      diskMat.current.uniforms.uTime.value = t;
+      // Ring decompresses (spreads out) on scroll down, compresses on scroll up
+      diskMat.current.uniforms.uOuter.value = DISK_OUTER_RADIUS * (1 + s * 0.9);
+      diskMat.current.uniforms.uInner.value = DISK_INNER_RADIUS * (1 - s * 0.25);
+      diskMat.current.uniforms.uNoiseScale.value = 2.5 * (1 - s * 0.55);
+      diskMat.current.uniforms.uFlowSpeed.value = 0.22 * (1 + s * 1.4);
+    }
     if (ehMat.current) {
       ehMat.current.uniforms.uTime.value = t;
       ehMat.current.uniforms.uCameraPosition.value.copy(state.camera.position);
     }
-    if (diskRef.current) diskRef.current.rotation.z += dt * 0.05;
+    if (diskRef.current) diskRef.current.rotation.z += dt * (0.05 + s * 0.15);
+    if (groupRef.current) {
+      // Whole scene stretches outward — the "space decompression"
+      const scl = scale * (1 + s * 0.6);
+      groupRef.current.scale.setScalar(scl);
+      groupRef.current.rotation.y = s * 0.4;
+    }
   });
 
   return (
-    <group scale={scale}>
+    <group ref={groupRef} scale={scale}>
       {/* Solid black core */}
       <mesh renderOrder={0}>
         <sphereGeometry args={[BLACK_HOLE_RADIUS, 128, 64]} />
@@ -221,9 +264,9 @@ function BlackHoleRig({ scale = 1 }: { scale?: number }) {
         />
       </mesh>
 
-      {/* Tilted accretion disk */}
+      {/* Tilted accretion disk — geometry sized generously; shader controls visible radii */}
       <mesh ref={diskRef} rotation={[DISK_TILT, 0, 0]} renderOrder={1}>
-        <ringGeometry args={[DISK_INNER_RADIUS, DISK_OUTER_RADIUS, 256, 128]} />
+        <ringGeometry args={[DISK_INNER_RADIUS * 0.6, DISK_OUTER_RADIUS * 2.0, 256, 128]} />
         <shaderMaterial
           ref={diskMat}
           uniforms={diskUniforms}
@@ -235,6 +278,26 @@ function BlackHoleRig({ scale = 1 }: { scale?: number }) {
           blending={THREE.AdditiveBlending}
         />
       </mesh>
+    </group>
+  );
+}
+
+function StarField() {
+  const ref = useRef<THREE.Group>(null!);
+  const smooth = useRef(0);
+  useFrame((_, dt) => {
+    const target = scrollRef.current;
+    smooth.current += (target - smooth.current) * Math.min(1, dt * 4);
+    if (ref.current) {
+      // Stars pull outward on scroll (space decompresses), inward on scroll up
+      const s = 1 + smooth.current * 1.2;
+      ref.current.scale.setScalar(s);
+      ref.current.rotation.z = smooth.current * 0.2;
+    }
+  });
+  return (
+    <group ref={ref}>
+      <Stars radius={300} depth={120} count={9000} factor={4} saturation={0} fade speed={0.08} />
     </group>
   );
 }
@@ -251,8 +314,9 @@ export function VoxeloBlackHoleScene({
   return (
     <SceneCanvas className={className} cameraZ={cameraZ} fov={60} bloomIntensity={0.9}>
       <ambientLight intensity={0.05} />
-      <Stars radius={300} depth={120} count={9000} factor={4} saturation={0} fade speed={0.08} />
+      <StarField />
       <BlackHoleRig scale={scale} />
     </SceneCanvas>
   );
 }
+
