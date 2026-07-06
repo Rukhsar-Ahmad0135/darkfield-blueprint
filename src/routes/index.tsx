@@ -222,35 +222,23 @@ function OpportunitiesPreview() {
 
 function Hero() {
   return (
-    <section className="relative overflow-hidden border-b border-hairline bg-black">
-      {/* Full-bleed Three.js space scene: rotating Earth + drifting spacecraft + stars */}
-      <div className="absolute inset-0">
-        <SpaceScene className="h-full w-full" />
-      </div>
-      {/* Vignettes so hero text stays crisp over Earth */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-background to-transparent" />
-
-      <div className="relative mx-auto grid min-h-[92vh] max-w-[1400px] content-center gap-16 px-6 pb-32 pt-24 lg:grid-cols-12 lg:px-12 lg:pt-32">
-        <div className="lg:col-span-7">
-          <Reveal>
+    <EarthHeroScene>
+      {() => (
+        <div className="relative mx-auto grid h-full max-w-[1400px] content-center gap-16 px-6 pb-32 pt-24 lg:grid-cols-12 lg:px-12 lg:pt-32">
+          {/* Vignette so text stays crisp */}
+          <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-black via-black/60 to-transparent" />
+          <div className="lg:col-span-7">
             <Eyebrow>Dark Field / Tech Labs · est. 2026 · UK</Eyebrow>
-          </Reveal>
-          <Reveal delay={0.08}>
             <h1 className="mt-8 font-display text-[48px] leading-[1.02] tracking-[-0.02em] sm:text-[72px] lg:text-[96px]">
               Beyond the <em className="italic text-white">event horizon</em>
               <br />
               of engineering.
             </h1>
-          </Reveal>
-          <Reveal delay={0.18}>
             <p className="mt-8 max-w-xl text-base text-muted-foreground sm:text-lg">
               Dark Field Tech Labs builds resilient wireless, stealth, surveillance and mesh
               systems for environments where conventional infrastructure breaks down — defense,
               critical infrastructure, autonomous fleets, and frontier research.
             </p>
-          </Reveal>
-          <Reveal delay={0.26}>
             <div className="mt-10 flex flex-wrap items-center gap-3">
               <Link
                 to="/technologies"
@@ -266,9 +254,6 @@ function Hero() {
                 Talk to an Engineer
               </Link>
             </div>
-          </Reveal>
-
-          <Reveal delay={0.34}>
             <dl className="mt-16 grid max-w-lg grid-cols-3 gap-6 border-t border-hairline pt-8">
               {[["04", "Core Pillars"], ["R&D", "Mandate"], ["Global", "Architecture"]].map(([k, v]) => (
                 <div key={v}>
@@ -277,10 +262,10 @@ function Hero() {
                 </div>
               ))}
             </dl>
-          </Reveal>
+          </div>
         </div>
-      </div>
-    </section>
+      )}
+    </EarthHeroScene>
   );
 }
 
