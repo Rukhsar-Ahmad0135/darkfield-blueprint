@@ -1,13 +1,86 @@
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF, Clone, AdaptiveDpr, AdaptiveEvents, PerformanceMonitor } from "@react-three/drei";
+import { useGLTF, Clone, AdaptiveDpr, AdaptiveEvents, PerformanceMonitor, Environment } from "@react-three/drei";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import shipAsset from "@/assets/endurance_hifi.glb.asset.json";
 
+// Film-accurate Endurance materials: off-white/gray PBR panels,
+// dark graphite trusses, blue-black glazing. Applied by name heuristics
+// with per-mesh subtle variation so the hull reads as many panels, not one shell.
+function applyEnduranceMaterials(root: THREE.Object3D) {
+  const rand = (seed: number) => {
+    const x = Math.sin(seed * 9301 + 49297) * 233280;
+    return x - Math.floor(x);
+  };
+
+  const hullBase = new THREE.Color("#d8d8d6"); // off-white
+  const grayBase = new THREE.Color("#8a8a8c"); // light gray
+  const trussCol = new THREE.Color("#1c1e22"); // dark graphite
+  const glassCol = new THREE.Color("#050914"); // blue-black glass
+
+  let idx = 0;
+  root.traverse((o: any) => {
+    if (!o.isMesh) return;
+    idx++;
+    const name = (o.name || "").toLowerCase();
+    const r = rand(idx);
+
+    const isGlass = /(window|glass|glaz|port|canopy|cockpit)/.test(name);
+    const isTruss = /(truss|frame|strut|joint|beam|spine|dock|antenna|rig|arm|clamp|bolt|thrust|engine|nozzle)/.test(
+      name
+    );
+
+    let mat: THREE.MeshStandardMaterial;
+
+    if (isGlass) {
+      mat = new THREE.MeshStandardMaterial({
+        color: glassCol,
+        metalness: 0.9,
+        roughness: 0.08,
+        envMapIntensity: 1.4,
+      });
+    } else if (isTruss) {
+      mat = new THREE.MeshStandardMaterial({
+        color: trussCol.clone().offsetHSL(0, 0, (r - 0.5) * 0.05),
+        metalness: 0.85,
+        roughness: 0.55 + r * 0.15,
+        envMapIntensity: 0.8,
+      });
+    } else {
+      // Hull panels: mix of off-white and light gray, subtle brightness variance
+      const base = r > 0.72 ? grayBase : hullBase;
+      const tint = base.clone().offsetHSL(0, 0, (r - 0.5) * 0.08);
+      // Occasional dark accent panel
+      const accent = r > 0.93 ? trussCol.clone() : tint;
+      mat = new THREE.MeshStandardMaterial({
+        color: accent,
+        metalness: 0.7 + r * 0.2,
+        roughness: 0.35 + r * 0.3, // brushed aluminum / titanium variance
+        envMapIntensity: 1.0,
+      });
+    }
+
+    // Preserve any existing normal/AO/roughness maps from the glb if present
+    const prev = o.material as THREE.MeshStandardMaterial | THREE.MeshStandardMaterial[] | undefined;
+    const prevSingle = Array.isArray(prev) ? prev[0] : prev;
+    if (prevSingle) {
+      if ((prevSingle as any).normalMap) mat.normalMap = (prevSingle as any).normalMap;
+      if ((prevSingle as any).aoMap) mat.aoMap = (prevSingle as any).aoMap;
+      if ((prevSingle as any).roughnessMap) mat.roughnessMap = (prevSingle as any).roughnessMap;
+      if ((prevSingle as any).metalnessMap) mat.metalnessMap = (prevSingle as any).metalnessMap;
+    }
+
+    o.material = mat;
+  });
+}
+
 function Ship() {
   const { scene } = useGLTF(shipAsset.url) as unknown as { scene: THREE.Group };
+
   const prepared = useMemo(() => {
     const c = scene.clone(true);
+
+    // Normalize scale + recenter to true bbox center (pivot = center of mass approx)
     const box = new THREE.Box3().setFromObject(c);
     const size = new THREE.Vector3();
     box.getSize(size);
@@ -16,7 +89,7 @@ function Ship() {
     const center = new THREE.Vector3();
     box.getCenter(center);
     c.position.sub(center.multiplyScalar(norm));
-    // Drop shadow cost
+
     c.traverse((o: any) => {
       if (o.isMesh) {
         o.castShadow = false;
@@ -24,12 +97,17 @@ function Ship() {
         o.frustumCulled = true;
       }
     });
+
+    applyEnduranceMaterials(c);
     return c;
   }, [scene]);
 
   const group = useRef<THREE.Group>(null!);
   const spinner = useRef<THREE.Group>(null!);
   const DUR = 26;
+
+  // 1.5 RPM ≈ 0.157 rad/s — realistic artificial-gravity spin rate
+  const SPIN = (1.5 * 2 * Math.PI) / 60;
 
   useFrame((state, dt) => {
     const t = state.clock.elapsedTime;
@@ -43,7 +121,9 @@ function Ship() {
       group.current.scale.setScalar(s);
     }
     if (spinner.current) {
-      spinner.current.rotation.z -= dt * 0.6;
+      // Rotate the entire spacecraft as one rigid body around longitudinal axis.
+      // Clockwise when viewed from +Z (after the X-axis pre-rotation this is the ship's own central axis).
+      spinner.current.rotation.z -= dt * SPIN;
     }
   });
 
@@ -61,7 +141,6 @@ export function HeroShipScene({ className }: { className?: string }) {
   const [visible, setVisible] = useState(false);
   const [dprMax, setDprMax] = useState(1.5);
 
-  // Only mount canvas when in viewport
   useEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
@@ -73,7 +152,6 @@ export function HeroShipScene({ className }: { className?: string }) {
     return () => io.disconnect();
   }, []);
 
-  // Preload GLB only when the section is near viewport
   useEffect(() => {
     if (visible) useGLTF.preload(shipAsset.url);
   }, [visible]);
@@ -86,11 +164,12 @@ export function HeroShipScene({ className }: { className?: string }) {
           dpr={[1, dprMax]}
           frameloop={visible ? "always" : "demand"}
           gl={{
-            antialias: false,
+            antialias: true,
             alpha: true,
             powerPreference: "high-performance",
             stencil: false,
             depth: true,
+            toneMapping: THREE.ACESFilmicToneMapping,
           }}
         >
           <PerformanceMonitor
@@ -99,12 +178,15 @@ export function HeroShipScene({ className }: { className?: string }) {
           />
           <AdaptiveDpr pixelated />
           <AdaptiveEvents />
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[5, 3, 4]} intensity={2.4} color="#ffffff" />
-          <directionalLight position={[-4, -2, 2]} intensity={0.6} color="#b6d0ff" />
-          <hemisphereLight args={["#b6d0ff", "#0a0f1c", 0.4]} />
+          {/* Sun: strong crisp directional key light */}
+          <directionalLight position={[6, 3, 4]} intensity={3.2} color="#fff4e6" />
+          {/* Cool fill from planet/earthshine */}
+          <directionalLight position={[-5, -2, 1]} intensity={0.35} color="#8fb4ff" />
+          <ambientLight intensity={0.08} />
           <Suspense fallback={null}>
             <Ship />
+            {/* Env map drives realistic metallic reflections */}
+            <Environment preset="city" background={false} />
           </Suspense>
         </Canvas>
       )}
