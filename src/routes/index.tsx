@@ -231,9 +231,12 @@ function Hero() {
         alt=""
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+        style={{ filter: "brightness(1.15) contrast(1.05) saturate(1.05)" }}
       />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black via-black/70 to-black/20" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
+      <HeroShipScene className="!absolute inset-0 !h-full !w-full" />
+
       <div className="relative mx-auto grid min-h-[92vh] max-w-[1400px] content-center gap-8 px-6 pb-12 pt-28 sm:pt-32 lg:grid-cols-12 lg:gap-16 lg:px-12 lg:pb-16 lg:pt-36">
         <div className="lg:col-span-7">
           <Eyebrow>Dark Field / Tech Labs · est. 2026 · UK</Eyebrow>
