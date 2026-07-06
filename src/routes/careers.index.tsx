@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { SiteShell, Section, Eyebrow } from "@/components/site/SiteShell";
+import { DustFieldScene } from "@/components/three/InterstellarScenes";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowUpRight } from "lucide-react";
 
@@ -38,7 +39,7 @@ function CareersPage() {
   const filtered = (jobs ?? []).filter((j) => filter === "All" ? true : j.type === filter || j.location === filter);
 
   return (
-    <SiteShell>
+    <SiteShell backdrop={<DustFieldScene className="h-full w-full" />}>
       <Section className="border-b border-hairline">
         <Eyebrow>Careers</Eyebrow>
         <h1 className="mt-6 max-w-4xl text-5xl font-semibold tracking-tight sm:text-7xl">Build technology the future depends on.</h1>
