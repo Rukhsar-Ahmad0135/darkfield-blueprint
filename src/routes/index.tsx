@@ -241,7 +241,9 @@ function Hero() {
       />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
-      <HeroShipScene className="!absolute inset-0 !h-full !w-full" />
+      <Suspense fallback={null}>
+        <HeroShipScene className="!absolute inset-0 !h-full !w-full" />
+      </Suspense>
 
       <div className="relative mx-auto grid min-h-[92vh] max-w-[1400px] content-center gap-8 px-6 pb-12 pt-28 sm:pt-32 lg:grid-cols-12 lg:gap-16 lg:px-12 lg:pb-16 lg:pt-36">
         <div className="lg:col-span-7">
