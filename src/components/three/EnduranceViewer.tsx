@@ -1,58 +1,96 @@
-import { Suspense, useRef } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, useGLTF, Environment } from "@react-three/drei";
+import { OrbitControls, useGLTF, Environment, AdaptiveDpr, AdaptiveEvents, PerformanceMonitor } from "@react-three/drei";
 import * as THREE from "three";
 import enduranceAsset from "@/assets/endurance.glb.asset.json";
-
-useGLTF.preload(enduranceAsset.url);
 
 function Endurance() {
   const { scene } = useGLTF(enduranceAsset.url) as any;
   const ref = useRef<THREE.Group>(null);
 
-  const cloned = scene.clone(true);
-  const box = new THREE.Box3().setFromObject(cloned);
-  const size = new THREE.Vector3();
-  box.getSize(size);
-  const center = new THREE.Vector3();
-  box.getCenter(center);
-  const maxDim = Math.max(size.x, size.y, size.z) || 1;
-  const s = 3.2 / maxDim;
-  cloned.position.sub(center);
+  const prepared = useMemo(() => {
+    const cloned = scene.clone(true);
+    const box = new THREE.Box3().setFromObject(cloned);
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    const center = new THREE.Vector3();
+    box.getCenter(center);
+    const maxDim = Math.max(size.x, size.y, size.z) || 1;
+    const s = 3.2 / maxDim;
+    cloned.position.sub(center);
+    cloned.scale.setScalar(s);
+    cloned.traverse((o: any) => {
+      if (o.isMesh) {
+        o.castShadow = false;
+        o.receiveShadow = false;
+      }
+    });
+    return cloned;
+  }, [scene]);
 
   useFrame((_, dt) => {
     if (ref.current) ref.current.rotation.y += dt * 0.15;
   });
 
   return (
-    <group ref={ref} scale={s}>
-      <primitive object={cloned} />
+    <group ref={ref}>
+      <primitive object={prepared} />
     </group>
   );
 }
 
 export function EnduranceViewer() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  const [dprMax, setDprMax] = useState(1.5);
+
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { rootMargin: "200px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (visible) useGLTF.preload(enduranceAsset.url);
+  }, [visible]);
+
   return (
-    <Canvas
-      camera={{ position: [4, 1.5, 5], fov: 40 }}
-      dpr={[1, 2]}
-      gl={{ antialias: true, alpha: true }}
-      style={{ background: "transparent" }}
-    >
-      <ambientLight intensity={0.6} />
-      <directionalLight position={[5, 5, 5]} intensity={1.2} />
-      <directionalLight position={[-5, -3, -5]} intensity={0.4} color="#88aaff" />
-      <Suspense fallback={null}>
-        <Endurance />
-        <Environment preset="city" />
-      </Suspense>
-      <OrbitControls
-        enablePan={false}
-        enableZoom={true}
-        minDistance={3}
-        maxDistance={12}
-        autoRotate={false}
-      />
-    </Canvas>
+    <div ref={wrapRef} className="h-full w-full" aria-hidden="true">
+      {visible && (
+        <Canvas
+          camera={{ position: [4, 1.5, 5], fov: 40 }}
+          dpr={[1, dprMax]}
+          frameloop={visible ? "always" : "demand"}
+          gl={{ antialias: false, alpha: true, powerPreference: "high-performance", stencil: false }}
+          style={{ background: "transparent" }}
+        >
+          <PerformanceMonitor
+            onDecline={() => setDprMax((d) => Math.max(1, d - 0.25))}
+            onIncline={() => setDprMax((d) => Math.min(2, d + 0.25))}
+          />
+          <AdaptiveDpr pixelated />
+          <AdaptiveEvents />
+          <ambientLight intensity={0.6} />
+          <directionalLight position={[5, 5, 5]} intensity={1.2} />
+          <directionalLight position={[-5, -3, -5]} intensity={0.4} color="#88aaff" />
+          <Suspense fallback={null}>
+            <Endurance />
+            <Environment preset="city" />
+          </Suspense>
+          <OrbitControls
+            enablePan={false}
+            enableZoom={true}
+            minDistance={3}
+            maxDistance={12}
+            autoRotate={false}
+          />
+        </Canvas>
+      )}
+    </div>
   );
 }
