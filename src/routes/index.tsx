@@ -225,40 +225,40 @@ function Hero() {
   return (
     <EarthHeroScene>
       {() => (
-        <div className="relative mx-auto grid h-full max-w-[1400px] content-center gap-10 overflow-y-auto px-6 pb-16 pt-20 lg:grid-cols-12 lg:gap-16 lg:px-12 lg:pb-20 lg:pt-24">
+        <div className="relative mx-auto grid h-full max-w-[1400px] content-center gap-8 px-6 pb-12 pt-28 sm:pt-32 lg:grid-cols-12 lg:gap-16 lg:px-12 lg:pb-16 lg:pt-36">
           {/* Vignette so text stays crisp */}
           <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-black via-black/60 to-transparent" />
           <div className="lg:col-span-7">
             <Eyebrow>Dark Field / Tech Labs · est. 2026 · UK</Eyebrow>
-            <h1 className="mt-6 font-display text-[40px] leading-[1.02] tracking-[-0.02em] sm:mt-8 sm:text-[64px] lg:text-[88px]">
+            <h1 className="mt-5 font-display text-[34px] leading-[1.05] tracking-[-0.02em] sm:mt-6 sm:text-[52px] lg:text-[72px]">
               Beyond the <em className="italic text-white">event horizon</em>
               <br />
               of engineering.
             </h1>
-            <p className="mt-6 max-w-xl text-base text-muted-foreground sm:mt-8 sm:text-lg">
+            <p className="mt-5 max-w-xl text-sm text-muted-foreground sm:mt-6 sm:text-base">
               Dark Field Tech Labs builds resilient wireless, stealth, surveillance and mesh
               systems for environments where conventional infrastructure breaks down — defense,
               critical infrastructure, autonomous fleets, and frontier research.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3 sm:mt-10">
+            <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-8">
               <Link
                 to="/technologies"
-                className="group inline-flex items-center gap-2 bg-ember px-6 py-3.5 text-[12px] uppercase tracking-[0.2em] text-primary-foreground hover:opacity-90"
+                className="group inline-flex items-center gap-2 bg-ember px-6 py-3 text-[12px] uppercase tracking-[0.2em] text-primary-foreground hover:opacity-90"
               >
                 Explore Our Technology
                 <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
               <Link
                 to="/contact"
-                className="inline-flex items-center gap-2 border border-hairline bg-black/40 px-6 py-3.5 text-[12px] uppercase tracking-[0.2em] backdrop-blur-sm hover:border-ember hover:text-ember"
+                className="inline-flex items-center gap-2 border border-hairline bg-black/40 px-6 py-3 text-[12px] uppercase tracking-[0.2em] backdrop-blur-sm hover:border-ember hover:text-ember"
               >
                 Talk to an Engineer
               </Link>
             </div>
-            <dl className="mt-10 grid max-w-lg grid-cols-3 gap-6 border-t border-hairline pt-6 sm:mt-16 sm:pt-8">
+            <dl className="mt-8 grid max-w-lg grid-cols-3 gap-6 border-t border-hairline pt-5 sm:mt-10 sm:pt-6">
               {[["04", "Core Pillars"], ["R&D", "Mandate"], ["Global", "Architecture"]].map(([k, v]) => (
                 <div key={v}>
-                  <dt className="text-mono text-[22px] font-medium text-ember">{k}</dt>
+                  <dt className="text-mono text-[20px] font-medium text-ember">{k}</dt>
                   <dd className="mt-1 text-[11px] uppercase tracking-[0.2em] text-text-muted">{v}</dd>
                 </div>
               ))}
