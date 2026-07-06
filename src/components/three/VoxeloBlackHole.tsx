@@ -222,7 +222,7 @@ function BlackHoleRig({ scale = 1 }: { scale?: number }) {
     const t = state.clock.elapsedTime;
     // ease scroll toward target for smooth compress/decompress
     const target = scrollRef.current;
-    smoothScroll.current += (target - smoothScroll.current) * Math.min(1, dt * 4);
+    smoothScroll.current += (target - smoothScroll.current) * Math.min(1, dt * 1.8);
     const s = smoothScroll.current; // 0..1
 
     if (diskMat.current) {
@@ -293,7 +293,7 @@ function StarField() {
   const smooth = useRef(0);
   useFrame((_, dt) => {
     const target = scrollRef.current;
-    smooth.current += (target - smooth.current) * Math.min(1, dt * 4);
+    smooth.current += (target - smooth.current) * Math.min(1, dt * 1.8);
     if (ref.current) {
       // Stars pull outward on scroll (space decompresses), inward on scroll up
       const s = 1 + smooth.current * 1.2;
@@ -325,6 +325,9 @@ function EnduranceFlyby() {
     pos: new THREE.Vector3(),
     dir: new THREE.Vector3(),
     yaw: 0,
+    targetYaw: 0,
+    total: 1,
+    traveled: 0,
   });
 
   const cloned = useMemo(() => {
@@ -335,23 +338,37 @@ function EnduranceFlyby() {
     const center = new THREE.Vector3();
     box.getCenter(center);
     const maxDim = Math.max(size.x, size.y, size.z) || 1;
-    const s = 1.2 / maxDim;
+    // Bigger ship — was 1.2, now 3.6
+    const s = 3.6 / maxDim;
     c.position.sub(center);
     c.scale.setScalar(s);
+    // enable transparency for smooth fade in/out
+    c.traverse((o: any) => {
+      if (o.isMesh && o.material) {
+        const mats = Array.isArray(o.material) ? o.material : [o.material];
+        mats.forEach((m: any) => {
+          m.transparent = true;
+          m.depthWrite = false;
+        });
+      }
+    });
     return c;
   }, [scene]);
 
   // pick a fresh random straight-line path across the scene
   function newRoute() {
-    // 8 compass points around the black hole, pick two opposite-ish
-    const R = 16;
+    const st = state.current;
+    const R = 18;
     const angle = Math.random() * Math.PI * 2;
     const perp = angle + Math.PI + (Math.random() - 0.5) * 0.6;
-    state.current.start.set(Math.cos(angle) * R, (Math.random() - 0.5) * 4, Math.sin(angle) * R * 0.4);
-    state.current.end.set(Math.cos(perp) * R, (Math.random() - 0.5) * 4, Math.sin(perp) * R * 0.4);
-    state.current.pos.copy(state.current.start);
-    state.current.dir.copy(state.current.end).sub(state.current.start).normalize();
-    state.current.yaw = Math.atan2(state.current.dir.x, state.current.dir.z);
+    st.start.set(Math.cos(angle) * R, (Math.random() - 0.5) * 4, Math.sin(angle) * R * 0.4);
+    st.end.set(Math.cos(perp) * R, (Math.random() - 0.5) * 4, Math.sin(perp) * R * 0.4);
+    st.pos.copy(st.start);
+    st.dir.copy(st.end).sub(st.start).normalize();
+    st.targetYaw = Math.atan2(st.dir.x, st.dir.z);
+    st.yaw = st.targetYaw;
+    st.total = st.start.distanceTo(st.end);
+    st.traveled = 0;
   }
 
   useEffect(() => {
@@ -360,21 +377,35 @@ function EnduranceFlyby() {
 
   useFrame((_, dt) => {
     const st = state.current;
-    // distance from black-hole center (0,0,0) in XY plane
     const dist = Math.hypot(st.pos.x, st.pos.y);
-    // Speed: slow (0.4) near center, cruise (2.4) far away
-    const speed = THREE.MathUtils.lerp(0.4, 2.4, THREE.MathUtils.clamp(dist / 8, 0, 1));
-    st.pos.addScaledVector(st.dir, speed * dt);
+    const speed = THREE.MathUtils.lerp(0.5, 2.8, THREE.MathUtils.clamp(dist / 9, 0, 1));
+    const step = speed * dt;
+    st.pos.addScaledVector(st.dir, step);
+    st.traveled += step;
 
-    // reached destination — pick a new path from a different side
-    if (st.pos.distanceTo(st.start) > st.end.distanceTo(st.start)) {
+    if (st.traveled >= st.total) {
       newRoute();
     }
 
     if (ref.current) {
       ref.current.position.copy(st.pos);
+      // smooth yaw easing
+      st.yaw += (st.targetYaw - st.yaw) * Math.min(1, dt * 3);
       ref.current.rotation.y = st.yaw;
-      ref.current.rotation.z += dt * 0.4;
+      ref.current.rotation.z += dt * 0.35;
+
+      // smooth fade in near start, fade out near end
+      const t = st.traveled / st.total;
+      const fade = Math.min(
+        THREE.MathUtils.smoothstep(t, 0, 0.12),
+        1 - THREE.MathUtils.smoothstep(t, 0.88, 1),
+      );
+      cloned.traverse((o: any) => {
+        if (o.isMesh && o.material) {
+          const mats = Array.isArray(o.material) ? o.material : [o.material];
+          mats.forEach((m: any) => (m.opacity = fade));
+        }
+      });
     }
   });
 
