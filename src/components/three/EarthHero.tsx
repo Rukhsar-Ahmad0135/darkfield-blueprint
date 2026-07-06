@@ -265,13 +265,17 @@ export function EarthHeroScene({
 }) {
   const sectionRef = useRef<HTMLElement>(null);
   const progress = useHeroScroll(sectionRef);
+  const progressRef = useRef(0);
+  progressRef.current = progress;
   const scaleTarget = useRef(0.12);
+  const earthScaleRef = useRef(0.12);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
   // Earth scale: tiny → full over the first 80% of scroll
   const earthProgress = Math.min(1, progress / 0.8);
   scaleTarget.current = 0.12 + earthProgress * 1.35;
+  earthScaleRef.current = scaleTarget.current;
 
   // Text reveal after Earth reaches peak
   const textReveal = Math.max(0, Math.min(1, (progress - 0.75) / 0.2));
