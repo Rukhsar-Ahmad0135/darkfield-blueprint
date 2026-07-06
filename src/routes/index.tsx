@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { SiteShell, Section, Eyebrow } from "@/components/site/SiteShell";
 import { MeshDiagram } from "@/components/site/Visuals";
 import { HeroShipScene } from "@/components/three/HeroShip";
+import { EnduranceViewer } from "@/components/three/EnduranceViewer";
 import { VoxeloBlackHoleScene as BlackHoleScene } from "@/components/three/VoxeloBlackHole";
 import { Reveal } from "@/components/site/Reveal";
 import { TECHNOLOGIES, SERVICES } from "@/lib/site-data";
