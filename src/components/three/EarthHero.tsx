@@ -30,6 +30,52 @@ function useHeroScroll(ref: React.RefObject<HTMLElement | null>) {
   return p;
 }
 
+/* ── Satellites orbiting Earth ─────────────────────────────────────────── */
+/* Animated satellites — one group per orbit with its own tilt */
+function OrbitingSatellites({ count = 25 }: { count?: number }) {
+  const refs = useRef<THREE.Mesh[]>([]);
+  const orbits = useMemo(() => {
+    const arr: { radius: number; speed: number; tilt: [number, number, number]; phase: number; size: number }[] = [];
+    for (let i = 0; i < count; i++) {
+      arr.push({
+        radius: 1.22 + Math.random() * 0.5,
+        speed: 0.18 + Math.random() * 0.35,
+        tilt: [
+          (Math.random() - 0.5) * Math.PI,
+          (Math.random() - 0.5) * Math.PI,
+          (Math.random() - 0.5) * Math.PI,
+        ],
+        phase: Math.random() * Math.PI * 2,
+        size: 0.009 + Math.random() * 0.008,
+      });
+    }
+    return arr;
+  }, [count]);
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    refs.current.forEach((m, i) => {
+      if (!m) return;
+      const o = orbits[i];
+      const a = t * o.speed + o.phase;
+      m.position.set(Math.cos(a) * o.radius, 0, Math.sin(a) * o.radius);
+    });
+  });
+
+  return (
+    <group>
+      {orbits.map((o, i) => (
+        <group key={i} rotation={o.tilt}>
+          <mesh ref={(el) => { if (el) refs.current[i] = el; }}>
+            <sphereGeometry args={[o.size, 10, 10]} />
+            <meshStandardMaterial color="#f5f7ff" emissive="#8fb4ff" emissiveIntensity={0.6} />
+          </mesh>
+        </group>
+      ))}
+    </group>
+  );
+}
+
 /* ── Earth + Clouds + Atmosphere ──────────────────────────────────────── */
 function Earth({ scaleTarget }: { scaleTarget: React.MutableRefObject<number> }) {
   const [colorMap, normalMap, specMap, cloudMap] = useLoader(THREE.TextureLoader, [
@@ -46,10 +92,8 @@ function Earth({ scaleTarget }: { scaleTarget: React.MutableRefObject<number> })
   const smooth = useRef(0);
 
   useFrame((_, dt) => {
-    // slow rotation
     if (earth.current) earth.current.rotation.y += dt * 0.045;
     if (clouds.current) clouds.current.rotation.y += dt * 0.06;
-    // ease scale toward scroll target
     smooth.current += (scaleTarget.current - smooth.current) * Math.min(1, dt * 3);
     if (group.current) group.current.scale.setScalar(smooth.current);
   });
@@ -62,16 +106,18 @@ function Earth({ scaleTarget }: { scaleTarget: React.MutableRefObject<number> })
           map={colorMap}
           normalMap={normalMap}
           specularMap={specMap}
-          specular={new THREE.Color("#2a2a2a")}
-          shininess={9}
+          specular={new THREE.Color("#3a3a3a")}
+          shininess={12}
+          emissive={new THREE.Color("#0a1428")}
+          emissiveIntensity={0.35}
         />
       </mesh>
       <mesh ref={clouds}>
         <sphereGeometry args={[1.015, 128, 128]} />
-        <meshPhongMaterial map={cloudMap} transparent opacity={0.45} depthWrite={false} />
+        <meshPhongMaterial map={cloudMap} transparent opacity={0.5} depthWrite={false} />
       </mesh>
-      {/* Atmospheric fresnel glow */}
-      <mesh scale={1.18}>
+      {/* Slim, faded atmospheric rim */}
+      <mesh scale={1.055}>
         <sphereGeometry args={[1, 96, 96]} />
         <shaderMaterial
           transparent
@@ -83,10 +129,12 @@ function Earth({ scaleTarget }: { scaleTarget: React.MutableRefObject<number> })
               vec4 p = modelViewMatrix * vec4(position,1.0); vP = -p.xyz;
               gl_Position = projectionMatrix * p; }`}
           fragmentShader={`varying vec3 vN; varying vec3 vP;
-            void main(){ float f = pow(1.0 - dot(normalize(vN), normalize(vP)), 3.0);
-              gl_FragColor = vec4(0.32, 0.58, 1.0, f * 0.7); }`}
+            void main(){ float f = pow(1.0 - dot(normalize(vN), normalize(vP)), 6.0);
+              gl_FragColor = vec4(0.55, 0.75, 1.0, f * 0.28); }`}
         />
       </mesh>
+      {/* Satellites scale with Earth */}
+      <OrbitingSatellites count={25} />
     </group>
   );
 }
@@ -137,8 +185,9 @@ export function EarthHeroScene({
             gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
             className="absolute inset-0"
           >
-            <ambientLight intensity={0.08} />
-            <directionalLight position={[6, 2, 4]} intensity={2.4} color="#fff2dc" />
+            <ambientLight intensity={0.35} />
+            <directionalLight position={[6, 2, 4]} intensity={2.8} color="#ffffff" />
+            <hemisphereLight args={["#b6d0ff", "#1a1a2a", 0.35]} />
             <Suspense fallback={null}>
               <SlowSpin>
                 <Stars radius={140} depth={70} count={9000} factor={3.2} saturation={0} fade speed={0.12} />
