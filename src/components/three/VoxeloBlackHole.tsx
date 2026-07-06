@@ -195,11 +195,12 @@ function BlackHoleRig({ scale = 1 }: { scale?: number }) {
   const diskUniforms = useMemo(
     () => ({
       uTime: { value: 0 },
-      uColorHot: { value: new THREE.Color(0xffffff) },
-      uColorMid1: { value: new THREE.Color(0xff7733) },
-      uColorMid2: { value: new THREE.Color(0xff4477) },
-      uColorMid3: { value: new THREE.Color(0x7744ff) },
-      uColorOuter: { value: new THREE.Color(0x4477ff) },
+      // Warm monochrome amber — Interstellar Gargantua palette, no rainbow
+      uColorHot: { value: new THREE.Color(0xfff2d8) },
+      uColorMid1: { value: new THREE.Color(0xffcc7a) },
+      uColorMid2: { value: new THREE.Color(0xffa347) },
+      uColorMid3: { value: new THREE.Color(0xd06a1a) },
+      uColorOuter: { value: new THREE.Color(0x6a2f08) },
       uNoiseScale: { value: 2.5 },
       uFlowSpeed: { value: 0.22 },
       uDensity: { value: 1.3 },
