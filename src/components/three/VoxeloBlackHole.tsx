@@ -1,8 +1,30 @@
 import { useFrame } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { SceneCanvas } from "./InterstellarScenes";
+
+/** Global normalized scroll (0..1) shared across scene rigs. */
+const scrollRef = { current: 0 };
+let scrollBound = false;
+function useScrollProgress() {
+  useEffect(() => {
+    if (scrollBound || typeof window === "undefined") return;
+    scrollBound = true;
+    const update = () => {
+      const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      scrollRef.current = Math.min(1, Math.max(0, window.scrollY / max));
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+  return scrollRef;
+}
 
 /**
  * Photoreal black hole ported from VoXelo's CodePen (wBKvJxd):
