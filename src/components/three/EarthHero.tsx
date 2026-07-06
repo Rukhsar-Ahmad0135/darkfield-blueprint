@@ -172,8 +172,6 @@ function Earth({ scaleTarget }: { scaleTarget: React.MutableRefObject<number> })
               gl_FragColor = vec4(0.55, 0.75, 1.0, f * 0.28); }`}
         />
       </mesh>
-      {/* Satellites scale with Earth */}
-      <OrbitingSatellites count={14} />
     </group>
   );
 }
