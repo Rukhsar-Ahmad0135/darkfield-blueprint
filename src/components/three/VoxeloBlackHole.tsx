@@ -237,12 +237,14 @@ function BlackHoleRig({ scale = 1 }: { scale?: number }) {
       ehMat.current.uniforms.uTime.value = t;
       ehMat.current.uniforms.uCameraPosition.value.copy(state.camera.position);
     }
-    if (diskRef.current) diskRef.current.rotation.z += dt * (0.05 + s * 0.15);
+    // Disk rotates slowly and visibly at all times
+    if (diskRef.current) diskRef.current.rotation.z += dt * (0.12 + s * 0.15);
     if (groupRef.current) {
       // Whole scene stretches outward — the "space decompression"
       const scl = scale * (1 + s * 0.6);
       groupRef.current.scale.setScalar(scl);
-      groupRef.current.rotation.y = s * 0.4;
+      // Slow continuous yaw so rotation is obvious
+      groupRef.current.rotation.y = s * 0.4 + t * 0.05;
     }
   });
 
