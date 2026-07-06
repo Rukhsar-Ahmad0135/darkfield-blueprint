@@ -1,8 +1,11 @@
 import { useFrame } from "@react-three/fiber";
-import { Stars } from "@react-three/drei";
-import { useEffect, useMemo, useRef } from "react";
+import { Stars, useGLTF } from "@react-three/drei";
+import { Suspense, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { SceneCanvas } from "./InterstellarScenes";
+import enduranceAsset from "@/assets/endurance.glb.asset.json";
+
+useGLTF.preload(enduranceAsset.url);
 
 /** Global normalized scroll (0..1) shared across scene rigs. */
 const scrollRef = { current: 0 };
