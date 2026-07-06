@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, Section, Eyebrow } from "@/components/site/SiteShell";
-import { DistantGargantuaScene } from "@/components/three/InterstellarScenes";
+import { VoxeloBlackHoleScene as DistantGargantuaScene } from "@/components/three/VoxeloBlackHole";
 import { SERVICES } from "@/lib/site-data";
 
 export const Route = createFileRoute("/services")({
