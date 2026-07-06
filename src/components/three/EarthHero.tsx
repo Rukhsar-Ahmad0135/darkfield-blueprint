@@ -133,7 +133,7 @@ function Earth({ scaleTarget }: { scaleTarget: React.MutableRefObject<number> })
   useFrame((_, dt) => {
     if (earth.current) earth.current.rotation.y += dt * 0.045;
     if (clouds.current) clouds.current.rotation.y += dt * 0.06;
-    smooth.current += (scaleTarget.current - smooth.current) * Math.min(1, dt * 3);
+    smooth.current += (scaleTarget.current - smooth.current) * Math.min(1, dt * 1.2);
     if (group.current) group.current.scale.setScalar(smooth.current);
   });
 
@@ -269,8 +269,9 @@ export function EarthHeroScene({
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  // Earth scale: tiny → full over the first 80% of scroll
-  const earthProgress = Math.min(1, progress / 0.8);
+  // Earth scale: tiny → full over the first 80% of scroll, eased for smoothness
+  const rawProgress = Math.min(1, progress / 0.8);
+  const earthProgress = rawProgress * rawProgress * (3 - 2 * rawProgress); // smoothstep
   scaleTarget.current = 0.12 + earthProgress * 2.15;
   earthScaleRef.current = scaleTarget.current;
 
