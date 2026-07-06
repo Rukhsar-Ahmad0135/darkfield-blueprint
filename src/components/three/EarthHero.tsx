@@ -269,8 +269,9 @@ export function EarthHeroScene({
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  // Earth scale: tiny → full over the first 80% of scroll
-  const earthProgress = Math.min(1, progress / 0.8);
+  // Earth scale: tiny → full over the first 80% of scroll, eased for smoothness
+  const rawProgress = Math.min(1, progress / 0.8);
+  const earthProgress = rawProgress * rawProgress * (3 - 2 * rawProgress); // smoothstep
   scaleTarget.current = 0.12 + earthProgress * 2.15;
   earthScaleRef.current = scaleTarget.current;
 
