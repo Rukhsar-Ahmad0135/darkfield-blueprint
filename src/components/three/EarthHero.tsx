@@ -31,22 +31,48 @@ function useHeroScroll(ref: React.RefObject<HTMLElement | null>) {
 }
 
 /* ── Satellites orbiting Earth ─────────────────────────────────────────── */
-/* Animated satellites — one group per orbit with its own tilt */
+/* Animated satellites — proper satellite mesh with body + solar panels */
+function SatelliteMesh() {
+  return (
+    <group>
+      {/* Body */}
+      <mesh>
+        <boxGeometry args={[0.04, 0.03, 0.03]} />
+        <meshStandardMaterial color="#d8dbe0" metalness={0.7} roughness={0.35} />
+      </mesh>
+      {/* Solar panels */}
+      <mesh position={[-0.075, 0, 0]}>
+        <boxGeometry args={[0.11, 0.002, 0.05]} />
+        <meshStandardMaterial color="#1a2f6b" emissive="#2a4a9c" emissiveIntensity={0.35} metalness={0.5} roughness={0.4} />
+      </mesh>
+      <mesh position={[0.075, 0, 0]}>
+        <boxGeometry args={[0.11, 0.002, 0.05]} />
+        <meshStandardMaterial color="#1a2f6b" emissive="#2a4a9c" emissiveIntensity={0.35} metalness={0.5} roughness={0.4} />
+      </mesh>
+      {/* Antenna dish */}
+      <mesh position={[0, 0.022, 0]} rotation={[Math.PI, 0, 0]}>
+        <coneGeometry args={[0.014, 0.018, 12, 1, true]} />
+        <meshStandardMaterial color="#f2f4f8" metalness={0.6} roughness={0.3} side={THREE.DoubleSide} />
+      </mesh>
+    </group>
+  );
+}
+
 function OrbitingSatellites({ count = 25 }: { count?: number }) {
-  const refs = useRef<THREE.Mesh[]>([]);
+  const refs = useRef<THREE.Group[]>([]);
   const orbits = useMemo(() => {
-    const arr: { radius: number; speed: number; tilt: [number, number, number]; phase: number; size: number }[] = [];
+    const arr: { radius: number; speed: number; tilt: [number, number, number]; phase: number; scale: number }[] = [];
     for (let i = 0; i < count; i++) {
       arr.push({
         radius: 1.22 + Math.random() * 0.5,
-        speed: 0.18 + Math.random() * 0.35,
+        speed: 0.05 + Math.random() * 0.09,
         tilt: [
           (Math.random() - 0.5) * Math.PI,
           (Math.random() - 0.5) * Math.PI,
           (Math.random() - 0.5) * Math.PI,
         ],
         phase: Math.random() * Math.PI * 2,
-        size: 0.009 + Math.random() * 0.008,
+        scale: 0.7 + Math.random() * 0.6,
       });
     }
     return arr;
@@ -54,11 +80,12 @@ function OrbitingSatellites({ count = 25 }: { count?: number }) {
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
-    refs.current.forEach((m, i) => {
-      if (!m) return;
+    refs.current.forEach((g, i) => {
+      if (!g) return;
       const o = orbits[i];
       const a = t * o.speed + o.phase;
-      m.position.set(Math.cos(a) * o.radius, 0, Math.sin(a) * o.radius);
+      g.position.set(Math.cos(a) * o.radius, 0, Math.sin(a) * o.radius);
+      g.rotation.y = -a + Math.PI / 2;
     });
   });
 
@@ -66,15 +93,15 @@ function OrbitingSatellites({ count = 25 }: { count?: number }) {
     <group>
       {orbits.map((o, i) => (
         <group key={i} rotation={o.tilt}>
-          <mesh ref={(el) => { if (el) refs.current[i] = el; }}>
-            <sphereGeometry args={[o.size, 10, 10]} />
-            <meshStandardMaterial color="#f5f7ff" emissive="#8fb4ff" emissiveIntensity={0.6} />
-          </mesh>
+          <group ref={(el) => { if (el) refs.current[i] = el; }} scale={o.scale}>
+            <SatelliteMesh />
+          </group>
         </group>
       ))}
     </group>
   );
 }
+
 
 /* ── Earth + Clouds + Atmosphere ──────────────────────────────────────── */
 function Earth({ scaleTarget }: { scaleTarget: React.MutableRefObject<number> }) {
