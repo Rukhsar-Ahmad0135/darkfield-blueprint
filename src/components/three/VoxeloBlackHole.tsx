@@ -222,7 +222,7 @@ function BlackHoleRig({ scale = 1 }: { scale?: number }) {
     const t = state.clock.elapsedTime;
     // ease scroll toward target for smooth compress/decompress
     const target = scrollRef.current;
-    smoothScroll.current += (target - smoothScroll.current) * Math.min(1, dt * 4);
+    smoothScroll.current += (target - smoothScroll.current) * Math.min(1, dt * 1.8);
     const s = smoothScroll.current; // 0..1
 
     if (diskMat.current) {
@@ -293,7 +293,7 @@ function StarField() {
   const smooth = useRef(0);
   useFrame((_, dt) => {
     const target = scrollRef.current;
-    smooth.current += (target - smooth.current) * Math.min(1, dt * 4);
+    smooth.current += (target - smooth.current) * Math.min(1, dt * 1.8);
     if (ref.current) {
       // Stars pull outward on scroll (space decompresses), inward on scroll up
       const s = 1 + smooth.current * 1.2;
