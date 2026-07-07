@@ -8,57 +8,59 @@ type Props = {
 };
 
 /**
- * Fullbleed background video that plays (with audio) only when the section
- * is visible in the viewport. Browsers block autoplay with sound until the
- * user interacts with the page, so we start muted and expose a sound toggle.
- * Once the user unmutes, we remember the preference for the session.
+ * Fullbleed background video optimized for smooth playback:
+ * - Preloads the full file (preload="auto") so decoding never stalls.
+ * - Keeps the video playing continuously once mounted (no play/pause on scroll,
+ *   which was the main source of stutter — every re-play forced a re-buffer).
+ * - Only mutes/unmutes based on viewport visibility so audio doesn't bleed
+ *   across sections while video keeps buffering smoothly in the background.
  */
 export function VideoBackdrop({ src, className, poster }: Props) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [muted, setMuted] = useState(true);
+  const [userMuted, setUserMuted] = useState(true);
+  const [inView, setInView] = useState(false);
 
   // Hydrate stored preference after mount to avoid SSR mismatch.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (sessionStorage.getItem("dftl:video-muted") === "0") setMuted(false);
+    if (sessionStorage.getItem("dftl:video-muted") === "0") setUserMuted(false);
   }, []);
 
-  // Play/pause based on visibility.
+  // Kick off playback once and keep it running to avoid re-buffer stutter.
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    const tryPlay = () => v.play().catch(() => {});
+    if (v.readyState >= 2) tryPlay();
+    else v.addEventListener("loadeddata", tryPlay, { once: true });
+    return () => v.removeEventListener("loadeddata", tryPlay);
+  }, []);
+
+  // Track viewport visibility for audio gating only.
   useEffect(() => {
     const el = containerRef.current;
-    const v = videoRef.current;
-    if (!el || !v) return;
+    if (!el) return;
     const io = new IntersectionObserver(
       (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting && e.intersectionRatio > 0.25) {
-            v.play().catch(() => {
-              // Autoplay with sound blocked — retry muted.
-              v.muted = true;
-              v.play().catch(() => {});
-            });
-          } else {
-            v.pause();
-          }
-        }
+        for (const e of entries) setInView(e.intersectionRatio > 0.35);
       },
-      { threshold: [0, 0.25, 0.5] },
+      { threshold: [0, 0.35, 0.75] },
     );
     io.observe(el);
     return () => io.disconnect();
   }, []);
 
-  // Sync muted state to element + persist.
+  // Mute unless the user has opted in AND section is in view.
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
-    v.muted = muted;
-    sessionStorage.setItem("dftl:video-muted", muted ? "1" : "0");
-    if (!muted) {
-      v.play().catch(() => {});
-    }
-  }, [muted]);
+    const shouldPlayAudio = !userMuted && inView;
+    v.muted = !shouldPlayAudio;
+    sessionStorage.setItem("dftl:video-muted", userMuted ? "1" : "0");
+    if (shouldPlayAudio) v.play().catch(() => {});
+  }, [userMuted, inView]);
 
   return (
     <div ref={containerRef} className={className}>
@@ -68,18 +70,22 @@ export function VideoBackdrop({ src, className, poster }: Props) {
         poster={poster}
         playsInline
         loop
-        muted={muted}
-        preload="metadata"
+        autoPlay
+        muted
+        preload="auto"
+        // @ts-expect-error - non-standard but respected by Safari
+        disableRemotePlayback
+        style={{ willChange: "transform", transform: "translateZ(0)" }}
         className="pointer-events-none absolute inset-0 h-full w-full object-cover"
       />
       <button
         type="button"
-        onClick={() => setMuted((m) => !m)}
-        aria-label={muted ? "Unmute background video" : "Mute background video"}
+        onClick={() => setUserMuted((m) => !m)}
+        aria-label={userMuted ? "Unmute background video" : "Mute background video"}
         className="absolute bottom-4 right-4 z-20 inline-flex items-center gap-2 border border-hairline bg-black/50 px-3 py-2 text-[10px] uppercase tracking-[0.2em] text-white backdrop-blur-sm hover:border-white hover:text-white"
       >
-        {muted ? <VolumeX className="size-3.5" /> : <Volume2 className="size-3.5" />}
-        {muted ? "Sound off" : "Sound on"}
+        {userMuted ? <VolumeX className="size-3.5" /> : <Volume2 className="size-3.5" />}
+        {userMuted ? "Sound off" : "Sound on"}
       </button>
     </div>
   );
