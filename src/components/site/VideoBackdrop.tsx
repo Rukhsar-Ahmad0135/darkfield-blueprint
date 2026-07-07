@@ -16,10 +16,13 @@ type Props = {
 export function VideoBackdrop({ src, className, poster }: Props) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [muted, setMuted] = useState(() => {
-    if (typeof window === "undefined") return true;
-    return sessionStorage.getItem("dftl:video-muted") !== "0";
-  });
+  const [muted, setMuted] = useState(true);
+
+  // Hydrate stored preference after mount to avoid SSR mismatch.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (sessionStorage.getItem("dftl:video-muted") === "0") setMuted(false);
+  }, []);
 
   // Play/pause based on visibility.
   useEffect(() => {
