@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { lazy, Suspense } from "react";
+
 import { SiteShell, Section, Eyebrow } from "@/components/site/SiteShell";
 import { MeshDiagram } from "@/components/site/Visuals";
 import { VideoBackdrop } from "@/components/site/VideoBackdrop";
