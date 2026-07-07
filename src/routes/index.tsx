@@ -67,7 +67,7 @@ function GargantuaSection() {
           <div className="max-w-xl">
             <Eyebrow>Gargantua · Signal Physics</Eyebrow>
             <h2 className="mt-6 font-display text-4xl leading-[1.05] tracking-tight sm:text-6xl">
-              At the edge of what's <em className="italic text-ember ember-glow">measurable</em>.
+              At the edge of what's <em className="italic text-white">measurable</em>.
             </h2>
             <p className="mt-6 text-base text-muted-foreground sm:text-lg">
               We operate where classical systems collapse — the deep field of RF, mesh,
@@ -244,14 +244,14 @@ function Hero() {
           <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-8">
             <Link
               to="/technologies"
-              className="group inline-flex items-center gap-2 bg-ember px-6 py-3 text-[12px] uppercase tracking-[0.2em] text-primary-foreground hover:opacity-90"
+              className="group inline-flex items-center gap-2 bg-white px-6 py-3 text-[12px] uppercase tracking-[0.2em] text-black hover:opacity-90"
             >
               Explore Our Technology
               <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
             <Link
               to="/contact"
-              className="inline-flex items-center gap-2 border border-hairline bg-black/40 px-6 py-3 text-[12px] uppercase tracking-[0.2em] backdrop-blur-sm hover:border-ember hover:text-ember"
+              className="inline-flex items-center gap-2 border border-hairline bg-black/40 px-6 py-3 text-[12px] uppercase tracking-[0.2em] backdrop-blur-sm hover:border-white hover:text-white"
             >
               Talk to an Engineer
             </Link>
@@ -259,7 +259,7 @@ function Hero() {
           <dl className="mt-8 grid max-w-lg grid-cols-3 gap-6 border-t border-hairline pt-5 sm:mt-10 sm:pt-6">
             {[["04", "Core Pillars"], ["R&D", "Mandate"], ["Global", "Architecture"]].map(([k, v]) => (
               <div key={v}>
-                <dt className="text-mono text-[20px] font-medium text-ember">{k}</dt>
+                <dt className="text-mono text-[20px] font-medium text-foreground">{k}</dt>
                 <dd className="mt-1 text-[11px] uppercase tracking-[0.2em] text-text-muted">{v}</dd>
               </div>
             ))}
