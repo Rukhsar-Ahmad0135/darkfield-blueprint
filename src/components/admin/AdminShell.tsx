@@ -30,8 +30,8 @@ export function AdminShell({ children, title }: { children: ReactNode; title: st
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="sticky top-0 z-40 flex items-center justify-center gap-2 border-b border-yellow-500/40 bg-yellow-500/10 px-4 py-2 text-[11px] uppercase tracking-[0.22em] text-yellow-300">
-        <span className="inline-block size-2 animate-pulse rounded-full bg-yellow-400" />
+      <div className="sticky top-0 z-40 flex items-center justify-center gap-2 border-b border-hairline bg-white/5 px-4 py-2 text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+        <span className="inline-block size-2 animate-pulse rounded-full bg-white/70" />
         Dev Preview — auth disabled. Do not publish.
       </div>
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-hairline bg-surface md:flex">
