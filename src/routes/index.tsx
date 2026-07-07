@@ -11,10 +11,6 @@ import { ArrowUpRight } from "lucide-react";
 import earthVideo from "@/assets/earth_video.mp4.asset.json";
 import blackholeVideo from "@/assets/blackhole_video.mp4.asset.json";
 
-const EnduranceViewer = lazy(() =>
-  import("@/components/three/EnduranceViewer").then((m) => ({ default: m.EnduranceViewer })),
-);
-
 
 export const Route = createFileRoute("/")({
   head: () => ({
