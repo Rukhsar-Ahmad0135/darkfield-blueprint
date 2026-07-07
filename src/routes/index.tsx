@@ -356,11 +356,6 @@ function TechGrid() {
 function Architecture() {
   return (
     <Section className="relative border-b border-hairline overflow-hidden">
-      <div className="pointer-events-auto absolute inset-0 -z-0 opacity-70">
-        <Suspense fallback={null}>
-          <EnduranceViewer />
-        </Suspense>
-      </div>
       <div className="relative z-10 grid gap-12 lg:grid-cols-12">
         <div className="lg:col-span-4">
           <Eyebrow>Flagship · Dark Field Mesh</Eyebrow>
