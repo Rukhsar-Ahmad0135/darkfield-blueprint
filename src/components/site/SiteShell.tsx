@@ -56,7 +56,7 @@ export function Section({
 export function Eyebrow({ children }: { children: ReactNode }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="h-px w-8 bg-ember/60" />
+      <span className="h-px w-8 bg-hairline" />
       <span className="eyebrow">{children}</span>
     </div>
   );
