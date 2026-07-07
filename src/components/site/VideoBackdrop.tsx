@@ -73,8 +73,6 @@ export function VideoBackdrop({ src, className, poster }: Props) {
         autoPlay
         muted
         preload="auto"
-        // @ts-expect-error - non-standard but respected by Safari
-        disableRemotePlayback
         style={{ willChange: "transform", transform: "translateZ(0)" }}
         className="pointer-events-none absolute inset-0 h-full w-full object-cover"
       />
