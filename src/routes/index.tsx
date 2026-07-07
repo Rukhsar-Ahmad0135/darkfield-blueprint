@@ -3,16 +3,14 @@ import { useQuery } from "@tanstack/react-query";
 import { lazy, Suspense } from "react";
 import { SiteShell, Section, Eyebrow } from "@/components/site/SiteShell";
 import { MeshDiagram } from "@/components/site/Visuals";
-import { VoxeloBlackHoleScene as BlackHoleScene } from "@/components/three/VoxeloBlackHole";
+import { VideoBackdrop } from "@/components/site/VideoBackdrop";
 import { Reveal } from "@/components/site/Reveal";
 import { TECHNOLOGIES, SERVICES } from "@/lib/site-data";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowUpRight } from "lucide-react";
-import earthHero from "@/assets/earth_hero.avif.asset.json";
+import earthVideo from "@/assets/earth_video.mp4.asset.json";
+import blackholeVideo from "@/assets/blackhole_video.mp4.asset.json";
 
-const HeroShipScene = lazy(() =>
-  import("@/components/three/HeroShip").then((m) => ({ default: m.HeroShipScene })),
-);
 const EnduranceViewer = lazy(() =>
   import("@/components/three/EnduranceViewer").then((m) => ({ default: m.EnduranceViewer })),
 );
@@ -66,9 +64,7 @@ function Home() {
 function GargantuaSection() {
   return (
     <section className="relative overflow-hidden border-b border-hairline bg-black">
-      <div className="absolute inset-0">
-        <BlackHoleScene className="h-full w-full" />
-      </div>
+      <VideoBackdrop src={blackholeVideo.url} className="absolute inset-0" />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black" />
       <div className="relative mx-auto grid min-h-[92vh] max-w-[1400px] items-end px-6 pb-24 pt-24 lg:px-12">
         <Reveal>
@@ -232,18 +228,9 @@ function OpportunitiesPreview() {
 function Hero() {
   return (
     <section className="relative overflow-hidden bg-black">
-      <img
-        src={earthHero.url}
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
-        style={{ filter: "brightness(1.15) contrast(1.05) saturate(1.05)" }}
-      />
+      <VideoBackdrop src={earthVideo.url} className="absolute inset-0" />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
-      <Suspense fallback={null}>
-        <HeroShipScene className="!absolute inset-0 !h-full !w-full" />
-      </Suspense>
 
       <div className="relative mx-auto grid min-h-[92vh] max-w-[1400px] content-center gap-8 px-6 pb-12 pt-28 sm:pt-32 lg:grid-cols-12 lg:gap-16 lg:px-12 lg:pb-16 lg:pt-36">
         <div className="lg:col-span-7">
