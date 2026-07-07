@@ -76,7 +76,7 @@ export function VideoBackdrop({ src, className, poster }: Props) {
         type="button"
         onClick={() => setMuted((m) => !m)}
         aria-label={muted ? "Unmute background video" : "Mute background video"}
-        className="absolute bottom-4 right-4 z-20 inline-flex items-center gap-2 border border-hairline bg-black/50 px-3 py-2 text-[10px] uppercase tracking-[0.2em] text-white backdrop-blur-sm hover:border-ember hover:text-ember"
+        className="absolute bottom-4 right-4 z-20 inline-flex items-center gap-2 border border-hairline bg-black/50 px-3 py-2 text-[10px] uppercase tracking-[0.2em] text-white backdrop-blur-sm hover:border-white hover:text-white"
       >
         {muted ? <VolumeX className="size-3.5" /> : <Volume2 className="size-3.5" />}
         {muted ? "Sound off" : "Sound on"}
