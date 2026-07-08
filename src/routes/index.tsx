@@ -224,7 +224,7 @@ function OpportunitiesPreview() {
 function Hero() {
   return (
     <section className="relative overflow-hidden bg-black">
-      <VideoBackdrop src={earthVideo.url} className="absolute inset-0" />
+      <VideoBackdrop src={earthVideo.url} className="absolute inset-0" priority />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
 
