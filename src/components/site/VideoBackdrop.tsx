@@ -42,7 +42,7 @@ export function VideoBackdrop({ src, className, poster, priority = false }: Prop
           io.disconnect();
         }
       },
-      { rootMargin: "1400px 0px" },
+      { rootMargin: "650px 0px" },
     );
 
     io.observe(el);
@@ -57,7 +57,7 @@ export function VideoBackdrop({ src, className, poster, priority = false }: Prop
 
     const io = new IntersectionObserver(
       ([entry]) => setShouldPlay(entry.isIntersecting),
-      { rootMargin: "900px 0px" },
+      { rootMargin: "420px 0px" },
     );
 
     io.observe(el);
