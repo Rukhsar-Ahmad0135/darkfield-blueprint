@@ -33,7 +33,11 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:url", content: "https://darkfield-blueprint.lovable.app/" },
     ],
-    links: [{ rel: "canonical", href: "https://darkfield-blueprint.lovable.app/" }],
+    links: [
+      { rel: "canonical", href: "https://darkfield-blueprint.lovable.app/" },
+      { rel: "preload", as: "video", href: earthVideo.url, type: "video/mp4" },
+      { rel: "prefetch", as: "video", href: blackholeVideo.url, type: "video/mp4" },
+    ],
   }),
 
   component: Home,
