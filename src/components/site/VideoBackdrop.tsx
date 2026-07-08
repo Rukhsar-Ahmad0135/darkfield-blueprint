@@ -56,7 +56,7 @@ export function VideoBackdrop({ src, className, poster, priority = false }: Prop
     if (!el) return;
 
     const io = new IntersectionObserver(
-      ([entry]) => setShouldPlay(priority || entry.isIntersecting),
+      ([entry]) => setShouldPlay(entry.isIntersecting),
       { rootMargin: "900px 0px" },
     );
 
