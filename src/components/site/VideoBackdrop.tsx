@@ -5,20 +5,22 @@ type Props = {
   src: string;
   className?: string;
   poster?: string;
+  priority?: boolean;
 };
 
 /**
  * Fullbleed background video optimized for smooth playback:
- * - Preloads the full file (preload="auto") so decoding never stalls.
- * - Keeps the video playing continuously once mounted (no play/pause on scroll,
- *   which was the main source of stutter — every re-play forced a re-buffer).
- * - Only mutes/unmutes based on viewport visibility so audio doesn't bleed
- *   across sections while video keeps buffering smoothly in the background.
+ * - Loads the hero clip immediately, then lazy-loads later clips before they enter view.
+ * - Keeps loaded clips warm without reassigning src, so scroll does not force re-buffering.
+ * - Pauses clips only when they are far offscreen, avoiding two videos decoding at once.
+ * - Gates audio by section visibility so sound does not bleed between sections.
  */
-export function VideoBackdrop({ src, className, poster }: Props) {
+export function VideoBackdrop({ src, className, poster, priority = false }: Props) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [userMuted, setUserMuted] = useState(true);
+  const [shouldLoad, setShouldLoad] = useState(priority);
+  const [shouldPlay, setShouldPlay] = useState(priority);
   const [inView, setInView] = useState(false);
 
   // Hydrate stored preference after mount to avoid SSR mismatch.
@@ -27,16 +29,59 @@ export function VideoBackdrop({ src, className, poster }: Props) {
     if (sessionStorage.getItem("dftl:video-muted") === "0") setUserMuted(false);
   }, []);
 
-  // Kick off playback once and keep it running to avoid re-buffer stutter.
+  // Load later videos before they reach the viewport, but do not decode every
+  // background video on page load. This keeps the visible clip smooth.
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || priority) return;
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoad(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "650px 0px" },
+    );
+
+    io.observe(el);
+    return () => io.disconnect();
+  }, [priority]);
+
+  // Track viewport proximity. A wide margin starts playback before the user
+  // arrives; once far away, playback pauses without unloading the buffered file.
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const io = new IntersectionObserver(
+      ([entry]) => setShouldPlay(entry.isIntersecting),
+      { rootMargin: "420px 0px" },
+    );
+
+    io.observe(el);
+    return () => io.disconnect();
+  }, [priority]);
+
   useEffect(() => {
     const v = videoRef.current;
-    if (!v) return;
+    if (!v || !shouldLoad) return;
+
     v.muted = true;
+    v.playsInline = true;
+
+    if (!shouldPlay) {
+      v.pause();
+      return;
+    }
+
     const tryPlay = () => v.play().catch(() => {});
     if (v.readyState >= 2) tryPlay();
-    else v.addEventListener("loadeddata", tryPlay, { once: true });
-    return () => v.removeEventListener("loadeddata", tryPlay);
-  }, []);
+    else v.addEventListener("canplay", tryPlay, { once: true });
+
+    return () => v.removeEventListener("canplay", tryPlay);
+  }, [shouldLoad, shouldPlay]);
 
   // Track viewport visibility for audio gating only.
   useEffect(() => {
@@ -56,24 +101,24 @@ export function VideoBackdrop({ src, className, poster }: Props) {
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
-    const shouldPlayAudio = !userMuted && inView;
+    const shouldPlayAudio = !userMuted && inView && shouldPlay;
     v.muted = !shouldPlayAudio;
     sessionStorage.setItem("dftl:video-muted", userMuted ? "1" : "0");
     if (shouldPlayAudio) v.play().catch(() => {});
-  }, [userMuted, inView]);
+  }, [userMuted, inView, shouldPlay]);
 
   return (
-    <div ref={containerRef} className={className}>
+    <div ref={containerRef} className={className} style={{ contain: "layout paint style" }}>
       <video
         ref={videoRef}
-        src={src}
+        src={shouldLoad ? src : undefined}
         poster={poster}
         playsInline
         loop
-        autoPlay
+        autoPlay={priority}
         muted
         preload="auto"
-        style={{ willChange: "transform", transform: "translateZ(0)" }}
+        style={{ backfaceVisibility: "hidden", transform: "translate3d(0,0,0)" }}
         className="pointer-events-none absolute inset-0 h-full w-full object-cover"
       />
       <button
