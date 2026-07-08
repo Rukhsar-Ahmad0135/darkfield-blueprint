@@ -82,7 +82,6 @@ export function VideoBackdrop({ src, className, poster, priority = false }: Prop
 
     return () => v.removeEventListener("canplay", tryPlay);
   }, [shouldLoad, shouldPlay]);
-  }, []);
 
   // Track viewport visibility for audio gating only.
   useEffect(() => {
