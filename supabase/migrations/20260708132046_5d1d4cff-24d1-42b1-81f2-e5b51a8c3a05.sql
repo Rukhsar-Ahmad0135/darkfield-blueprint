@@ -1,0 +1,1 @@
+UPDATE public.collaborations SET logo_url = '/__l5e/assets-v1/edf9b497-26a8-4103-91bc-ec38fce6d156/exovion-logo.jpeg' WHERE id = '6217743a-671d-40de-af1b-b456e0979874';

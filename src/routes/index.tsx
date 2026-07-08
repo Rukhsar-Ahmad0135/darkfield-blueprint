@@ -155,9 +155,9 @@ function CollaborationsStrip() {
             >
               <div className="flex items-center gap-4">
                 {c.logo_url ? (
-                  <img src={c.logo_url} alt={c.name} className="h-10 w-10 border border-hairline object-contain p-1" />
+                  <img src={c.logo_url} alt={c.name} className="h-20 w-20 border border-hairline bg-black object-contain p-2" />
                 ) : (
-                  <div className="flex h-10 w-10 items-center justify-center border border-hairline text-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
+                  <div className="flex h-20 w-20 items-center justify-center border border-hairline text-mono text-[12px] uppercase tracking-[0.18em] text-text-muted">
                     {c.name.slice(0, 2)}
                   </div>
                 )}
